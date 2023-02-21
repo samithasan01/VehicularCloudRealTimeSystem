@@ -122,6 +122,8 @@ public class VehicularCloudFrame extends JFrame {
 
 	class VehicleOwnerSubmitListener implements ActionListener {
 	    public void actionPerformed(ActionEvent event) {
+		date = new Date();
+	    	timestamp = new Timestamp(date.getTime());
 	        String name = vehicleOwnerNameField.getText();
 	        String dob = vehicleOwnerDOBField.getText();
 	        String id = vehicleOwnerIDField.getText();
@@ -150,6 +152,8 @@ public class VehicularCloudFrame extends JFrame {
 
 	class JobRequesterSubmitListener implements ActionListener {
 	    public void actionPerformed(ActionEvent event) {
+		date = new Date();
+	    	timestamp = new Timestamp(date.getTime());
 	        String name = jobRequesterNameField.getText();
 	        String dob = jobRequesterDOBField.getText();
 	        String id = jobRequesterIDField.getText();
