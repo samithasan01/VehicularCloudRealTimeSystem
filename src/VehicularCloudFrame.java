@@ -18,9 +18,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class VehicularCloudFrame extends JFrame {
-    private static final int FRAME_WIDTH = 300;
-    private static final int FRAME_HEIGHT = 250;
+    private static final int FRAME_WIDTH = 350;
+    private static final int FRAME_HEIGHT = 500;
     private static final int FIELD_WIDTH = 10;
 
     private JLabel homeDescLabel;
@@ -67,6 +70,8 @@ public class VehicularCloudFrame extends JFrame {
     private CardLayout layout;
     private JPanel cardsPanel;
     private PrintStream output;
+    private Timestamp timestamp;
+    private Date date;
 
     // Constructor
 	public VehicularCloudFrame() throws FileNotFoundException {
@@ -92,6 +97,8 @@ public class VehicularCloudFrame extends JFrame {
         layout = new CardLayout();
         cardsPanel = new JPanel(layout);
 		output = new PrintStream(new File("userInformation.txt"));
+		date = new Date();
+		timestamp = new Timestamp(date.getTime());
 
         createTextFields();
         createButtons();
@@ -102,21 +109,15 @@ public class VehicularCloudFrame extends JFrame {
         setLocationRelativeTo(null);
         
         vehicleOwnerSubmitButton.addActionListener(new VehicleOwnerSubmitListener());
-        jobRequesterSubmitButton.addActionListener(new VehicleOwnerSubmitListener());
+        jobRequesterSubmitButton.addActionListener(new JobRequesterSubmitListener());
 
     }
 
 	private void saveUserDataToFile(String userData) {
-	    try {
-	        FileWriter writer = new FileWriter("userInformation.txt", true);
-	        writer.write(userData);
-	        writer.write(System.getProperty("line.separator"));
-	        writer.close();
-	        String currentDir = System.getProperty("user.dir");
-	        JOptionPane.showMessageDialog(this, "User data saved successfully!\n\n Current working directory:" + currentDir);
-	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(this, "An error occurred while saving user data: " + e.getMessage());
-	    }
+	    output.println(userData);
+	    output.println();
+		String currentDir = System.getProperty("user.dir");
+		JOptionPane.showMessageDialog(this, "User data saved successfully!\n\n Current working directory:" + currentDir);
 	}
 
 	class VehicleOwnerSubmitListener implements ActionListener {
@@ -131,13 +132,19 @@ public class VehicularCloudFrame extends JFrame {
 	        String license= vehicleLicenseField.getText();	//New
 	        String residency = vehicleResidencyField.getText(); //New
 	        
-	        String outputString = "Vehicle Owner: " + name + ", DOB: " + dob + ", ID: " + id + ", Make: " + make + ", Model: " + model + ", Year: " + year + ", Color: " + color 
+	        String outputString = timestamp + " Vehicle Owner: " + name + ", DOB: " + dob + ", ID: " + id + ", Make: " + make + ", Model: " + model + ", Year: " + year + ", Color: " + color 
 	        		+ ", License: " + license + ", Residency Time: " + residency;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
 	        vehicleOwnerNameField.setText("");
 	        vehicleOwnerDOBField.setText("mm/dd/yyyy");
 	        vehicleOwnerIDField.setText("");
+	        vehicleMakeField.setText("");
+	        vehicleModelField.setText("");
+	        vehicleYearField.setText("yyyy");
+	        vehicleColorField.setText("");
+	        vehicleLicenseField.setText("");
+	        vehicleResidencyField.setText("Hours");
 	    }
 	}
 
@@ -150,12 +157,16 @@ public class VehicularCloudFrame extends JFrame {
 	        String deadline = jobDeadlineField.getText();//New
 	        String type = jobTypeField.getText(); 	//New
 	        String intensity = jobIntensityField.getText(); //New
-	        String outputString = "Job Requester: " + name + ", DOB: " + dob + ", ID: " + id + ", Duration: " + duration + ", Deadline: " + deadline + ", Type: " +type +", Intensity: " + intensity;
+	        String outputString = timestamp + " Job Requester: " + name + ", DOB: " + dob + ", ID: " + id + ", Duration: " + duration + ", Deadline: " + deadline + ", Type: " +type +", Intensity: " + intensity;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
-	        vehicleOwnerNameField.setText("");
-	        vehicleOwnerDOBField.setText("mm/dd/yyyy");
-	        vehicleOwnerIDField.setText("");
+	        jobRequesterNameField.setText("");
+	        jobRequesterDOBField.setText("mm/dd/yyyy");
+	        jobRequesterIDField.setText("");
+	        jobDurationField.setText("Hours");
+	        jobDeadlineField.setText("mm/dd/yyyy");
+	        jobTypeField.setText("");
+	        jobIntensityField.setText("Easy/Medium/Hard");
 	        
 	    }
 	}
@@ -202,6 +213,7 @@ public class VehicularCloudFrame extends JFrame {
         jobTypeField.setText("");						//New
         jobIntensityField = new JTextField(FIELD_WIDTH);//New
         jobIntensityField.setText("Easy/Medium/Hard");	//New
+        jobIntensityField.setColumns(12);
     }
 	class VehicleOwnerListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
@@ -260,7 +272,7 @@ public class VehicularCloudFrame extends JFrame {
 		ActionListener jobRequesterBackListener = new ReturnHomeListener();
 		jobRequesterBackButton.addActionListener(jobRequesterBackListener);
 		
-		 //Vehicle Owner Submit Button
+		//Vehicle Owner Submit Button
         vehicleOwnerSubmitButton = new JButton("Submit");
         ActionListener vehicleOwnerSubmitListener = new ActionListener() {
             @Override
@@ -276,13 +288,9 @@ public class VehicularCloudFrame extends JFrame {
     	        String residency = vehicleResidencyField.getText();		//New
 
                 
-                String outputString = "Vehicle Owner: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year 
+                String outputString = timestamp.toString() + "Vehicle Owner: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year 
                 		+ "\nColor: " + color + "\nlicense: " + license + "\nResidency: " + residency;
-                try {
-                    output.println(outputString);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+
             }
         };
         vehicleOwnerSubmitButton.addActionListener(vehicleOwnerSubmitListener);
@@ -299,13 +307,8 @@ public class VehicularCloudFrame extends JFrame {
     	        String deadline = jobDeadlineField.getText();	//New
     	        String type = jobTypeField.getText(); 			//New
     	        String intensity = jobIntensityField.getText(); //New
-                String outputString = "Job Requester: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nJob Duration: " + duration 
+                String outputString = timestamp.toString() + "Job Requester: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nJob Duration: " + duration 
                 		+ "\nJob Deadline: " + deadline + "\nJob Type: " + type + "\nJob Intensity: " + intensity;
-                try {
-                    output.println(outputString);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
             }
         };
         jobRequesterSubmitButton.addActionListener(jobRequesterSubmitListener);
@@ -323,6 +326,8 @@ public class VehicularCloudFrame extends JFrame {
 		JPanel jobRequesterDOBPanel = new JPanel();
 		JPanel vehicleOwnerIDPanel = new JPanel();
 		JPanel jobRequesterIDPanel = new JPanel();
+		JPanel vehicleOwnerButtonPanel = new JPanel();
+		JPanel jobRequesterButtonPanel = new JPanel();
 	    JPanel jobDurationPanel = new JPanel(); //New
 	    JPanel jobDeadlinePanel = new JPanel();//New
 	    JPanel jobTypePanel = new JPanel(); 	//New
@@ -372,6 +377,9 @@ public class VehicularCloudFrame extends JFrame {
 		vehicleResidencyPanel.add(vehicleResidencyLabel);
 		vehicleResidencyPanel.add(vehicleResidencyField);
 		
+		vehicleOwnerButtonPanel.add(vehicleOwnerBackButton);
+		vehicleOwnerButtonPanel.add(vehicleOwnerSubmitButton); // add to panel
+		
 		vehicleOwnerPanel.add(vehicleOwnerDescLabel);
 		vehicleOwnerPanel.add(vehicleOwnerNamePanel);
 		vehicleOwnerPanel.add(vehicleOwnerDOBPanel);
@@ -382,9 +390,8 @@ public class VehicularCloudFrame extends JFrame {
 		vehicleOwnerPanel.add(vehicleColorPanel);
 		vehicleOwnerPanel.add(vehicleLicensePanel);
 		vehicleOwnerPanel.add(vehicleResidencyPanel);
-		vehicleOwnerPanel.add(vehicleOwnerBackButton);
-		vehicleOwnerPanel.add(vehicleOwnerSubmitButton); // add to panel
-
+		
+		vehicleOwnerPanel.add(vehicleOwnerButtonPanel);
 		
 		//Job Requester Panels
 		jobRequesterNamePanel.add(jobRequesterNameLabel);
@@ -409,6 +416,8 @@ public class VehicularCloudFrame extends JFrame {
 		jobIntensityPanel.add(jobIntensityLabel);  //New
 		jobIntensityPanel.add(jobIntensityField);  //New
 
+		jobRequesterButtonPanel.add(jobRequesterBackButton);
+		jobRequesterButtonPanel.add(jobRequesterSubmitButton); // add to panel
 		
 		jobRequesterPanel.add(jobRequesterDescLabel);
 		jobRequesterPanel.add(jobRequesterNamePanel);
@@ -418,8 +427,6 @@ public class VehicularCloudFrame extends JFrame {
 		jobRequesterPanel.add(jobDeadlinePanel);	//New
 		jobRequesterPanel.add(jobTypePanel); 		//New
 		jobRequesterPanel.add(jobIntensityPanel); 	//New
-		
-		jobRequesterPanel.add(jobRequesterBackButton);
-		jobRequesterPanel.add(jobRequesterSubmitButton); // add to panel
+		jobRequesterPanel.add(jobRequesterButtonPanel);
 	}
 }
