@@ -31,31 +31,31 @@ public class VehicularCloudFrame extends JFrame {
     private JLabel vehicleOwnerDOBLabel;
     private JLabel jobRequesterDOBLabel;
     private JLabel vehicleOwnerIDLabel;
-    private JLabel vehicleMakeLabel;	
-    private JLabel vehicleModelLabel;	
-    private JLabel vehicleYearLabel;	
-    private JLabel vehicleColorLabel;	
-    private JLabel vehicleLicenseLabel;	
-    private JLabel vehicleResidencyLabel;
+    private JLabel vehicleMakeLabel;	//New
+    private JLabel vehicleModelLabel;	//New
+    private JLabel vehicleYearLabel;	//New
+    private JLabel vehicleColorLabel;	//New
+    private JLabel vehicleLicenseLabel;	//New
+    private JLabel vehicleResidencyLabel;//New
     private JLabel jobRequesterIDLabel;
-    private JLabel jobDurationLabel; 	
-    private JLabel jobDeadlineLabel;	
-    private JLabel jobTypeLabel; 		
-    private JLabel jobIntensityLabel;	
+    private JLabel jobDurationLabel; 	//New
+    private JLabel jobDeadlineLabel;	//New
+    private JLabel jobTypeLabel; 		//New
+    private JLabel jobIntensityLabel;	//New
     private JTextField vehicleOwnerNameField;
     private JTextField jobRequesterNameField;
     private JTextField vehicleOwnerIDField;
-    private JTextField vehicleMakeField;	
-    private JTextField vehicleModelField;	
-    private JTextField vehicleYearField;	
-    private JTextField vehicleColorField;	
-    private JTextField vehicleLicenseField;	
-    private JTextField vehicleResidencyField;
+    private JTextField vehicleMakeField;	//New
+    private JTextField vehicleModelField;	//New
+    private JTextField vehicleYearField;	//New
+    private JTextField vehicleColorField;	//New
+    private JTextField vehicleLicenseField;	//New
+    private JTextField vehicleResidencyField;//New
     private JTextField jobRequesterIDField;
-    private JTextField jobDurationField;	
-    private JTextField jobDeadlineField;	
-    private JTextField jobTypeField; 		
-    private JTextField jobIntensityField;	
+    private JTextField jobDurationField;	//New
+    private JTextField jobDeadlineField;	//New
+    private JTextField jobTypeField; 		//New
+    private JTextField jobIntensityField;	//New
     private JFormattedTextField vehicleOwnerDOBField;
     private JFormattedTextField jobRequesterDOBField;
     private JButton vehicleOwnerButton;
@@ -78,17 +78,17 @@ public class VehicularCloudFrame extends JFrame {
         vehicleOwnerDOBLabel = new JLabel("Date of Birth: ");
         jobRequesterDOBLabel = new JLabel("Date of Birth: ");
         vehicleOwnerIDLabel = new JLabel("ID Number: ");
-        vehicleMakeLabel = new JLabel("Make: ");			
-        vehicleModelLabel = new JLabel("Model ");				
-        vehicleYearLabel = new JLabel("Year ");				
-        vehicleColorLabel = new JLabel("Color: ");				
-        vehicleLicenseLabel = new JLabel("License Plate: ");
-        vehicleResidencyLabel = new JLabel("Residency Time (in hours): ");
+        vehicleMakeLabel = new JLabel("Make: ");				//New
+        vehicleModelLabel = new JLabel("Model ");				//New
+        vehicleYearLabel = new JLabel("Year ");					//New
+        vehicleColorLabel = new JLabel("Color: ");				//New
+        vehicleLicenseLabel = new JLabel("License Plate: ");	//New
+        vehicleResidencyLabel = new JLabel("Residency Time (in hours): "); //New
         jobRequesterIDLabel = new JLabel("ID Number: ");
-        jobDurationLabel = new JLabel("Job Duration (in hours): ");	
-        jobDeadlineLabel = new JLabel("Job Deadline: ");		
-        jobTypeLabel = new JLabel("Job Type: ");				
-        jobIntensityLabel = new JLabel("Job Intensity: ");			
+        jobDurationLabel = new JLabel("Job Duration (in hours): ");	//New
+        jobDeadlineLabel = new JLabel("Job Deadline: ");			//New
+        jobTypeLabel = new JLabel("Job Type: ");					//New
+        jobIntensityLabel = new JLabel("Job Intensity: ");			//New
         layout = new CardLayout();
         cardsPanel = new JPanel(layout);
 		output = new PrintStream(new File("userInformation.txt"));
@@ -124,12 +124,12 @@ public class VehicularCloudFrame extends JFrame {
 	        String name = vehicleOwnerNameField.getText();
 	        String dob = vehicleOwnerDOBField.getText();
 	        String id = vehicleOwnerIDField.getText();
-	        String make = vehicleMakeField.getText();	
-	        String model = vehicleModelField.getText();	
-	        String year = vehicleYearField.getText();	
-	        String color = vehicleColorField.getText();	
-	        String license= vehicleLicenseField.getText();	
-	        String residency = vehicleResidencyField.getText(); 
+	        String make = vehicleMakeField.getText();	//New
+	        String model = vehicleModelField.getText();	//New
+	        String year = vehicleYearField.getText();	//New
+	        String color = vehicleColorField.getText();	//New
+	        String license= vehicleLicenseField.getText();	//New
+	        String residency = vehicleResidencyField.getText(); //New
 	        
 	        String outputString = "Vehicle Owner: " + name + ", DOB: " + dob + ", ID: " + id + ", Make: " + make + ", Model: " + model + ", Year: " + year + ", Color: " + color 
 	        		+ ", License: " + license + ", Residency Time: " + residency;
@@ -146,10 +146,10 @@ public class VehicularCloudFrame extends JFrame {
 	        String name = jobRequesterNameField.getText();
 	        String dob = jobRequesterDOBField.getText();
 	        String id = jobRequesterIDField.getText();
-	        String duration = jobDurationField.getText();
-	        String deadline = jobDeadlineField.getText();
-	        String type = jobTypeField.getText(); 
-	        String intensity = jobIntensityField.getText();
+	        String duration = jobDurationField.getText(); //New
+	        String deadline = jobDeadlineField.getText();//New
+	        String type = jobTypeField.getText(); 	//New
+	        String intensity = jobIntensityField.getText(); //New
 	        String outputString = "Job Requester: " + name + ", DOB: " + dob + ", ID: " + id + ", Duration: " + duration + ", Deadline: " + deadline + ", Type: " +type +", Intensity: " + intensity;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
@@ -172,18 +172,18 @@ public class VehicularCloudFrame extends JFrame {
         vehicleOwnerDOBField.setColumns(10);
         vehicleOwnerIDField = new JTextField(FIELD_WIDTH);
         vehicleOwnerIDField.setText("");
-        vehicleMakeField = new JTextField(FIELD_WIDTH);
+        vehicleMakeField = new JTextField(FIELD_WIDTH);	//New
         vehicleMakeField.setText("");
-        vehicleModelField = new JTextField(FIELD_WIDTH);
-        vehicleModelField.setText("");						
-        vehicleYearField = new JTextField(FIELD_WIDTH);		
-        vehicleYearField.setText("yyyy");					
-        vehicleColorField = new JTextField(FIELD_WIDTH);	
-        vehicleColorField.setText("");						
-        vehicleLicenseField = new JTextField(FIELD_WIDTH);	
-        vehicleLicenseField.setText("");					
-        vehicleResidencyField = new JTextField(FIELD_WIDTH);
-        vehicleResidencyField.setText("Hours");				
+        vehicleModelField = new JTextField(FIELD_WIDTH);	//New
+        vehicleModelField.setText("");						//New
+        vehicleYearField = new JTextField(FIELD_WIDTH);		//New
+        vehicleYearField.setText("yyyy");					//New
+        vehicleColorField = new JTextField(FIELD_WIDTH);	//New
+        vehicleColorField.setText("");						//New
+        vehicleLicenseField = new JTextField(FIELD_WIDTH);	//New
+        vehicleLicenseField.setText("");					//New
+        vehicleResidencyField = new JTextField(FIELD_WIDTH);//New
+        vehicleResidencyField.setText("Hours");				//New
 
        
         //Job Requester Text Fields
@@ -194,14 +194,14 @@ public class VehicularCloudFrame extends JFrame {
         jobRequesterDOBField.setColumns(10);
         jobRequesterIDField = new JTextField(FIELD_WIDTH);
         jobRequesterIDField.setText("");
-        jobDurationField = new JTextField(FIELD_WIDTH);	
-        jobDurationField.setText("Hours");				
-        jobDeadlineField = new JTextField(FIELD_WIDTH);
-        jobDeadlineField.setText("mm/dd/yyyy");			
-        jobTypeField = new JTextField(FIELD_WIDTH);		
-        jobTypeField.setText("");						
-        jobIntensityField = new JTextField(FIELD_WIDTH);
-        jobIntensityField.setText("Easy/Medium/Hard");	
+        jobDurationField = new JTextField(FIELD_WIDTH);	//New
+        jobDurationField.setText("Hours");				//New
+        jobDeadlineField = new JTextField(FIELD_WIDTH);	//New
+        jobDeadlineField.setText("mm/dd/yyyy");			//New
+        jobTypeField = new JTextField(FIELD_WIDTH);		//New
+        jobTypeField.setText("");						//New
+        jobIntensityField = new JTextField(FIELD_WIDTH);//New
+        jobIntensityField.setText("Easy/Medium/Hard");	//New
     }
 	class VehicleOwnerListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
@@ -210,12 +210,12 @@ public class VehicularCloudFrame extends JFrame {
 			vehicleOwnerNameField.setText("");
 			vehicleOwnerDOBField.setText("mm/dd/yyyy");
 			vehicleOwnerIDField.setText("");
-	        vehicleMakeField.setText("");		
-	        vehicleModelField.setText("");		
-	        vehicleYearField.setText("yyyy");	
-	        vehicleColorField.setText("");		
-	        vehicleLicenseField.setText("");	
-	        vehicleResidencyField.setText("Hours");
+	        vehicleMakeField.setText("");		//New
+	        vehicleModelField.setText("");		//New
+	        vehicleYearField.setText("yyyy");	//New
+	        vehicleColorField.setText("");		//New
+	        vehicleLicenseField.setText("");	//New
+	        vehicleResidencyField.setText("Hours");//New
 		}
 	}
 	
@@ -227,10 +227,10 @@ public class VehicularCloudFrame extends JFrame {
 			jobRequesterNameField.setText("");
 			jobRequesterDOBField.setText("mm/dd/yyyy");
 			jobRequesterIDField.setText("");
-			jobDurationField.setText("Hours");			
-			jobDeadlineField.setText("mm/dd/yyyy");		
-			jobTypeField.setText("");				
-			jobIntensityField.setText("Easy/Medium/Hard");	
+			jobDurationField.setText("Hours");				//New
+			jobDeadlineField.setText("mm/dd/yyyy");			//New
+			jobTypeField.setText("");						//New
+			jobIntensityField.setText("Easy/Medium/Hard");	//New
 		}
 	}
 	
@@ -268,12 +268,12 @@ public class VehicularCloudFrame extends JFrame {
                 String name = vehicleOwnerNameField.getText();
                 String dob = vehicleOwnerDOBField.getText();
                 String id = vehicleOwnerIDField.getText();
-                String make = vehicleMakeField.getText();			
-    	        String model = vehicleModelField.getText();				
-    	        String year = vehicleYearField.getText();			
-    	        String color = vehicleColorField.getText();			
-    	        String license = vehicleLicenseField.getText();		
-    	        String residency = vehicleResidencyField.getText();	
+                String make = vehicleMakeField.getText();				//New
+    	        String model = vehicleModelField.getText();				//New
+    	        String year = vehicleYearField.getText();				//New
+    	        String color = vehicleColorField.getText();				//New
+    	        String license = vehicleLicenseField.getText();			//New
+    	        String residency = vehicleResidencyField.getText();		//New
 
                 
                 String outputString = "Vehicle Owner: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year 
@@ -295,9 +295,9 @@ public class VehicularCloudFrame extends JFrame {
                 String name = jobRequesterNameField.getText();
                 String dob = jobRequesterDOBField.getText();
                 String id = jobRequesterIDField.getText();
-                String duration = jobDurationField.getText(); 
-    	        String deadline = jobDeadlineField.getText();	
-    	        String type = jobTypeField.getText(); 	
+                String duration = jobDurationField.getText(); 	//New
+    	        String deadline = jobDeadlineField.getText();	//New
+    	        String type = jobTypeField.getText(); 			//New
     	        String intensity = jobIntensityField.getText(); //New
                 String outputString = "Job Requester: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nJob Duration: " + duration 
                 		+ "\nJob Deadline: " + deadline + "\nJob Type: " + type + "\nJob Intensity: " + intensity;
@@ -323,16 +323,16 @@ public class VehicularCloudFrame extends JFrame {
 		JPanel jobRequesterDOBPanel = new JPanel();
 		JPanel vehicleOwnerIDPanel = new JPanel();
 		JPanel jobRequesterIDPanel = new JPanel();
-	    JPanel jobDurationPanel = new JPanel(); 
-	    JPanel jobDeadlinePanel = new JPanel();/
-	    JPanel jobTypePanel = new JPanel(); 
-	    JPanel jobIntensityPanel = new JPanel();
-	    JPanel vehicleMakePanel = new JPanel();
-	    JPanel vehicleModelPanel = new JPanel();
-	    JPanel vehicleYearPanel = new JPanel();
-	    JPanel vehicleColorPanel = new JPanel();
-	    JPanel vehicleLicensePanel = new JPanel();
-	    JPanel vehicleResidencyPanel = new JPanel();
+	    JPanel jobDurationPanel = new JPanel(); //New
+	    JPanel jobDeadlinePanel = new JPanel();//New
+	    JPanel jobTypePanel = new JPanel(); 	//New
+	    JPanel jobIntensityPanel = new JPanel(); //New
+	    JPanel vehicleMakePanel = new JPanel();	//New
+	    JPanel vehicleModelPanel = new JPanel();	//New
+	    JPanel vehicleYearPanel = new JPanel();	//New
+	    JPanel vehicleColorPanel = new JPanel();	//New
+	    JPanel vehicleLicensePanel = new JPanel();	//New
+	    JPanel vehicleResidencyPanel = new JPanel();//New
 		
 		cardsPanel.add(homePanel, "home");
 		cardsPanel.add(vehicleOwnerPanel, "vehicleOwner");
@@ -383,7 +383,7 @@ public class VehicularCloudFrame extends JFrame {
 		vehicleOwnerPanel.add(vehicleLicensePanel);
 		vehicleOwnerPanel.add(vehicleResidencyPanel);
 		vehicleOwnerPanel.add(vehicleOwnerBackButton);
-		vehicleOwnerPanel.add(vehicleOwnerSubmitButton);
+		vehicleOwnerPanel.add(vehicleOwnerSubmitButton); // add to panel
 
 		
 		//Job Requester Panels
@@ -396,30 +396,30 @@ public class VehicularCloudFrame extends JFrame {
 		jobRequesterIDPanel.add(jobRequesterIDLabel);
 		jobRequesterIDPanel.add(jobRequesterIDField);
 		
-		jobDurationPanel.add(jobDurationLabel);
-		jobDurationPanel.add(jobDurationField);
+		jobDurationPanel.add(jobDurationLabel); //New
+		jobDurationPanel.add(jobDurationField); //New
 		
-		jobDeadlinePanel.add(jobDeadlineLabel);
-		jobDeadlinePanel.add(jobDeadlineField);
+		jobDeadlinePanel.add(jobDeadlineLabel);  //New
+		jobDeadlinePanel.add(jobDeadlineField);  //New
 		
-		jobTypePanel.add(jobTypeLabel);
-		jobTypePanel.add(jobTypeField);
+		jobTypePanel.add(jobTypeLabel);  //New
+		jobTypePanel.add(jobTypeField);  //New
 		
 		
-		jobIntensityPanel.add(jobIntensityLabel);
-		jobIntensityPanel.add(jobIntensityField);
+		jobIntensityPanel.add(jobIntensityLabel);  //New
+		jobIntensityPanel.add(jobIntensityField);  //New
 
 		
 		jobRequesterPanel.add(jobRequesterDescLabel);
 		jobRequesterPanel.add(jobRequesterNamePanel);
 		jobRequesterPanel.add(jobRequesterDOBPanel);
 		jobRequesterPanel.add(jobRequesterIDPanel);
-		jobRequesterPanel.add(jobDurationPanel);
-		jobRequesterPanel.add(jobDeadlinePanel);
-		jobRequesterPanel.add(jobTypePanel); 
-		jobRequesterPanel.add(jobIntensityPanel); 
+		jobRequesterPanel.add(jobDurationPanel);	 //New
+		jobRequesterPanel.add(jobDeadlinePanel);	//New
+		jobRequesterPanel.add(jobTypePanel); 		//New
+		jobRequesterPanel.add(jobIntensityPanel); 	//New
 		
 		jobRequesterPanel.add(jobRequesterBackButton);
-		jobRequesterPanel.add(jobRequesterSubmitButton);
+		jobRequesterPanel.add(jobRequesterSubmitButton); // add to panel
 	}
 }
