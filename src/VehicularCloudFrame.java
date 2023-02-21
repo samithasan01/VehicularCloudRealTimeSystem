@@ -8,6 +8,22 @@ import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 public class VehicularCloudFrame extends JFrame {
 	
 	private static final int FRAME_WIDTH = 300;
@@ -37,6 +53,8 @@ public class VehicularCloudFrame extends JFrame {
 	private JFormattedTextField jobRequesterDOBField;
 	private JButton vehicleOwnerButton;
 	private JButton jobRequesterButton;
+	private JButton vehicleOwnerSubmitButton; // new
+    	private JButton jobRequesterSubmitButton; // new
 	private JButton vehicleOwnerBackButton;
 	private JButton jobRequesterBackButton;
 	private CardLayout layout;
@@ -58,6 +76,10 @@ public class VehicularCloudFrame extends JFrame {
 			jobRequesterNameLabel = new JLabel("Name: ");
 			vehicleOwnerDOBLabel = new JLabel("Date of Birth: ");
 			jobRequesterDOBLabel = new JLabel("Date of Birth: ");
+			
+			vehicleOwnerIDLabel = new JLabel("ID Number: ");
+       			jobRequesterIDLabel = new JLabel("ID Number: ");
+			
 			vehicleMakeLabel = new JLabel("Make of the Vehicle: ");
 			vehicleModelLabel = new JLabel("Model of the Vehicle: ");
 			vehicleYearLabel = new JLabel("The year the model of the vehicle was released: ");
@@ -76,8 +98,53 @@ public class VehicularCloudFrame extends JFrame {
 			setSize(FRAME_WIDTH, FRAME_HEIGHT);
 			setTitle("Vehicular Cloud Management System");
 			setLocationRelativeTo(null);
+			
+			vehicleOwnerSubmitButton.addActionListener(new VehicleOwnerSubmitListener());
+        		jobRequesterSubmitButton.addActionListener(new JobRequesterSubmitListener());
 		}
 		
+		private void saveUserDataToFile(String userData) {
+	    		try {
+	        	FileWriter writer = new FileWriter("userInformation.txt", true);
+	        	writer.write(userData);
+	        	writer.write(System.getProperty("line.separator"));
+	        	writer.close();
+	        	String currentDir = System.getProperty("user.dir");
+	        	JOptionPane.showMessageDialog(this, "User data saved successfully!\n\n Current working directory:" + currentDir);
+	    		} 
+			catch (IOException e) {
+	        	JOptionPane.showMessageDialog(this, "An error occurred while saving user data: " + e.getMessage());
+	    		}
+		}
+	
+		class VehicleOwnerSubmitListener implements ActionListener {
+	    		public void actionPerformed(ActionEvent event) {
+	        		String name = vehicleOwnerNameField.getText();
+	        		String dob = vehicleOwnerDOBField.getText();
+	        		String id = vehicleOwnerIDField.getText();
+	        		String outputString = "Vehicle Owner: " + name + ", DOB: " + dob + ", ID: " + id;
+	        		saveUserDataToFile(outputString);
+	        		//Reset Text Fields
+	        		//vehicleOwnerNameField.setText("");
+	        		//vehicleOwnerDOBField.setText("mm/dd/yyyy");
+	        		//vehicleOwnerIDField.setText("");
+	    		}
+		}
+	
+		class JobRequesterSubmitListener implements ActionListener {
+	    		public void actionPerformed(ActionEvent event) {
+	       			String name = jobRequesterNameField.getText();
+	        		String dob = jobRequesterDOBField.getText();
+	        		String id = jobRequesterIDField.getText();
+	        		String outputString = "Job Requester: " + name + ", DOB: " + dob + ", ID: " + id;
+	        		saveUserDataToFile(outputString);
+	        		//Reset Text Fields
+	        		//jobRequesterNameField.setText("");
+	        		//jobRequesterDOBField.setText("mm/dd/yyyy");
+	        		//jobRequesterIDField.setText("");
+	    		}
+		}
+	
 		//Creates text fields
 		private void createTextFields() {
 			DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
@@ -145,6 +212,45 @@ public class VehicularCloudFrame extends JFrame {
 			
 			ActionListener jobRequesterBackListener = new ReturnHomeListener();
 			jobRequesterBackButton.addActionListener(jobRequesterBackListener);
+			
+			//Vehicle Owner Submit Button
+        		vehicleOwnerSubmitButton = new JButton("Submit");
+        		ActionListener vehicleOwnerSubmitListener = new ActionListener() {
+            			@Override
+            			public void actionPerformed(ActionEvent e) {
+                			String name = vehicleOwnerNameField.getText();
+                			String dob = vehicleOwnerDOBField.getText();
+                			String id = vehicleOwnerIDField.getText();
+                			String outputString = "Vehicle Owner: " + name + "\nDate of Birth: " + dob + "\nID: " + id;
+                			try {
+                    			output.println(outputString);
+                			}
+					catch (Exception ex) {
+                    			ex.printStackTrace();
+                			}
+            			}
+        		};
+        		vehicleOwnerSubmitButton.addActionListener(vehicleOwnerSubmitListener);
+			
+        		//Job Requester Submit Button
+        		jobRequesterSubmitButton = new JButton("Submit");
+        		ActionListener jobRequesterSubmitListener = new ActionListener() {
+            			@Override
+            			public void actionPerformed(ActionEvent e) {
+                			String name = jobRequesterNameField.getText();
+                			String dob = jobRequesterDOBField.getText();
+                			String id = jobRequesterIDField.getText();
+                			String outputString = "Job Requester: " + name + "\nDate of Birth: " + dob + "\nID: " + id;
+                			try {
+                    			output.println(outputString);
+                			}
+					catch (Exception ex) {
+                    			ex.printStackTrace();
+                			}
+            			}
+        		};
+        		jobRequesterSubmitButton.addActionListener(jobRequesterSubmitListener);
+        
 		}
 		
 		//Creates the panels
@@ -185,6 +291,8 @@ public class VehicularCloudFrame extends JFrame {
 			vehicleOwnerPanel.add(vehicleOwnerIDPanel);
 			vehicleOwnerPanel.add(vehicleOwnerBackButton);
 			
+			vehicleOwnerPanel.add(vehicleOwnerSubmitButton); // add to panel
+			
 			//Job Requester Panels
 			jobRequesterNamePanel.add(jobRequesterNameLabel);
 			jobRequesterNamePanel.add(jobRequesterNameField);
@@ -200,6 +308,8 @@ public class VehicularCloudFrame extends JFrame {
 			jobRequesterPanel.add(jobRequesterDOBPanel);
 			jobRequesterPanel.add(jobRequesterIDPanel);
 			jobRequesterPanel.add(jobRequesterBackButton);
+			
+			jobRequesterPanel.add(jobRequesterSubmitButton); // add to panel
 			
 		}
 	}
