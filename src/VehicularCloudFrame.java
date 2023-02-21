@@ -75,7 +75,7 @@ public class VehicularCloudFrame extends JFrame {
 
     // Constructor
 	public VehicularCloudFrame() throws FileNotFoundException {
-		homeDescLabel = new JLabel("Please click on which type of user you are:");
+	homeDescLabel = new JLabel("Please click on which type of user you are:");
         vehicleOwnerDescLabel = new JLabel("Please enter the following information:");
         jobRequesterDescLabel = new JLabel("Please enter the following information:");
         vehicleOwnerNameLabel = new JLabel("Name: ");
@@ -132,8 +132,7 @@ public class VehicularCloudFrame extends JFrame {
 	        String license= vehicleLicenseField.getText();	//New
 	        String residency = vehicleResidencyField.getText(); //New
 	        
-	        String outputString = timestamp + " Vehicle Owner: " + name + ", DOB: " + dob + ", ID: " + id + ", Make: " + make + ", Model: " + model + ", Year: " + year + ", Color: " + color 
-	        		+ ", License: " + license + ", Residency Time: " + residency;
+	        String outputString = timestamp + " \nVehicle Owner: " + name + "\nDOB: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year + "\nColor: " + color + "\nLicense: " + license + "\nResidency Time: " + residency;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
 	        vehicleOwnerNameField.setText("");
@@ -157,7 +156,7 @@ public class VehicularCloudFrame extends JFrame {
 	        String deadline = jobDeadlineField.getText();//New
 	        String type = jobTypeField.getText(); 	//New
 	        String intensity = jobIntensityField.getText(); //New
-	        String outputString = timestamp + " Job Requester: " + name + ", DOB: " + dob + ", ID: " + id + ", Duration: " + duration + ", Deadline: " + deadline + ", Type: " +type +", Intensity: " + intensity;
+	        String outputString = timestamp + " \nJob Requester: " + name + "\nDOB: " + dob + "\nID: " + id + "\nDuration: " + duration + "\nDeadline: " + deadline + "\nType: " +type +"\nIntensity: " + intensity;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
 	        jobRequesterNameField.setText("");
