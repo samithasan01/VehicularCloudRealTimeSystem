@@ -10,6 +10,10 @@ public class Job {
 	private int completionTime;
 	private int levelOfRedundancy;
 	
+	//Add an id field to uniquely identify each job
+	private int id;
+	private static int nextId = 1;
+	
 	public Job(double duration, String deadline, String type, String intensity, boolean inprogress, boolean completed, int completionTime) {
 		this.duration = duration;
 		this.deadline = deadline;
@@ -19,6 +23,10 @@ public class Job {
 		this.completed = completed;
 		//Default redundancy until VCController calculates and assigns one
 		levelOfRedundancy = 1;
+		
+		//Assign the next available id to the job
+		id = nextId;
+		nextId++;
 	}
 	
 	public double getDuration() {
@@ -83,5 +91,18 @@ public class Job {
 	
 	public void setLevelOfRedundancy(int redundancy) {
 		this.levelOfRedundancy = redundancy;
+	}
+	
+	//Add a getter method for the id field
+	public int getId() {
+		return id;
+	}
+	
+	//Override the toString() method to include the job id
+	@Override
+	public String toString() {
+		return "Job [id=" + id + ", duration=" + duration + ", deadline=" + deadline + ", type=" + type + ", intensity="
+				+ intensity + ", inprogress=" + inprogress + ", completed=" + completed + ", completionTime="
+				+ completionTime + ", levelOfRedundancy=" + levelOfRedundancy + "]";
 	}
 }
