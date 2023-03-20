@@ -1,29 +1,68 @@
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class VCController {
+	private Queue<Job> jobList;
+	private Queue<Vehicle> vehicleList;
+	private PrintStream completedJobsOutput;
 	
-	void assignJob(Job, Vehicle) {	//needs to be defined
-		
-	}
-	
-	void chooseRedundancy() {	//needs to be defined
-		
-	}
-	
-	void recruitNewVehicle(Vehicle) {	//needs to be defined
-		
+	public VCController() throws FileNotFoundException {
+		jobList = new LinkedList<Job>();
+		vehicleList = new LinkedList<Vehicle>();
+		completedJobsOutput = new PrintStream(new File("completedJobs.txt"));
 	}
 	
-	void copyCheckpoint() {	//needs to be defined
-		
+	public int calculateCompletionTime(){
+		int completionTime = 0;
+		for(Job job : jobList) {
+			completionTime += job.getDuration();
+		}
+		return completionTime;
 	}
 	
-	void restartComputation() {	//needs to be defined
+	public void chooseRedundancy(Job job) {
+		int redundancy;
+		if(job.getIntensity().equalsIgnoreCase("hard")) {
+			redundancy = 5;
+		}
+		else if(job.getIntensity().equalsIgnoreCase("medium")) {
+			redundancy = 3;
+		}
+		else {
+			redundancy = 2;
+		}
+		job.setLevelOfRedundancy(redundancy);
+	}
+	
+	public void addJob(Job job) {
+		jobList.add(job);
+		int completionTime = calculateCompletionTime();
+		job.setCompletionTime(completionTime);
+	}
+	
+	public void addVehicle(Vehicle vehicle) {
+		vehicleList.add(vehicle);
+	}
+	
+	public void transferJob(Job job){
+		if (job.getCompleted()) {
+			String completedJob = jobList.peek().toString();
+			completedJobsOutput.println(completedJob);
+			completedJobsOutput.println();
+			eraseJob();
+		}
+	}
+	
+	public void eraseJob(){
+		jobList.remove();
+	}
+	
+	public void assignJob(Job job){
 		
 	}
-
-	void calculateCompletionTime() {	//needs to be defined
-		
-	}
-
 	
 }
