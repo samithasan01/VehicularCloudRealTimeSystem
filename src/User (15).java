@@ -1,6 +1,20 @@
-
 public class User {
-	
-	String name;
-	String dateOfBirth;
+    public String name;
+    public String dateOfBirth;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 }
