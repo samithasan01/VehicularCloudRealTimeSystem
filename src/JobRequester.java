@@ -1,9 +1,18 @@
 
 public class JobRequester extends User{
+	private int clientID;
 	
-	int clientID;
+	public JobRequester(String name, String dob, int clientID) {
+		super (name, dob);
+		this.clientID = clientID;
+	}
 	
-	public JobRequester() {
-		Job.submitJob();	//needs to be defined
+	public int getClientID() {
+		return clientID;
+	}
+	
+	public void setClientID(int id) {
+		this.clientID = id;
 	}
 }
+
