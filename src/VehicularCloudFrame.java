@@ -3,13 +3,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -17,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -63,6 +58,9 @@ public class VehicularCloudFrame extends JFrame {
     private JFormattedTextField jobRequesterDOBField;
     private JButton vehicleOwnerButton;
     private JButton jobRequesterButton;
+    
+    private JButton calculateCompletionTimeButton;
+
     private JButton vehicleOwnerSubmitButton; 
     private JButton jobRequesterSubmitButton; 
     private JButton vehicleOwnerBackButton;
@@ -72,6 +70,8 @@ public class VehicularCloudFrame extends JFrame {
     private PrintStream output;
     private Timestamp timestamp;
     private Date date;
+    private VCController vcc;
+    private String completionTime;
 
     // Constructor
 	public VehicularCloudFrame() throws FileNotFoundException {
@@ -99,6 +99,7 @@ public class VehicularCloudFrame extends JFrame {
 		output = new PrintStream(new File("userInformation.txt"));
 		date = new Date();
 		timestamp = new Timestamp(date.getTime());
+		vcc = new VCController();
 
         createTextFields();
         createButtons();
@@ -122,6 +123,9 @@ public class VehicularCloudFrame extends JFrame {
 
 	class VehicleOwnerSubmitListener implements ActionListener {
 	    public void actionPerformed(ActionEvent event) {
+	    	date = new Date();
+	    	timestamp = new Timestamp(date.getTime());
+	    	
 	        String name = vehicleOwnerNameField.getText();
 	        String dob = vehicleOwnerDOBField.getText();
 	        String id = vehicleOwnerIDField.getText();
@@ -132,8 +136,7 @@ public class VehicularCloudFrame extends JFrame {
 	        String license= vehicleLicenseField.getText();	//New
 	        String residency = vehicleResidencyField.getText(); //New
 	        
-	        String outputString = timestamp + " Vehicle Owner: " + name + ", DOB: " + dob + ", ID: " + id + ", Make: " + make + ", Model: " + model + ", Year: " + year + ", Color: " + color 
-	        		+ ", License: " + license + ", Residency Time: " + residency;
+	        String outputString = timestamp + " \nVehicle Owner: " + name + "\nDOB: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year + "\nColor: " + color + "\nLicense: " + license + "\nResidency Time: " + residency;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
 	        vehicleOwnerNameField.setText("");
@@ -149,15 +152,24 @@ public class VehicularCloudFrame extends JFrame {
 	}
 
 	class JobRequesterSubmitListener implements ActionListener {
+
 	    public void actionPerformed(ActionEvent event) {
+	    	date = new Date();
+	    	timestamp = new Timestamp(date.getTime());
+	    	
 	        String name = jobRequesterNameField.getText();
 	        String dob = jobRequesterDOBField.getText();
 	        String id = jobRequesterIDField.getText();
-	        String duration = jobDurationField.getText(); //New
+	        double duration = Double.parseDouble(jobDurationField.getText());
 	        String deadline = jobDeadlineField.getText();//New
 	        String type = jobTypeField.getText(); 	//New
 	        String intensity = jobIntensityField.getText(); //New
-	        String outputString = timestamp + " Job Requester: " + name + ", DOB: " + dob + ", ID: " + id + ", Duration: " + duration + ", Deadline: " + deadline + ", Type: " +type +", Intensity: " + intensity;
+	          	
+	        Job job = new Job(duration, deadline, type, intensity, false, false, 0);
+	        vcc.addJob(job);
+	        completionTime = "" + job.getCompletionTime();
+	        
+	        String outputString = timestamp + " \nJob Requester: " + name + "\nDOB: " + dob + "\nID: " + id + "\nDuration: " + duration + "\nDeadline: " + deadline + "\nType: " +type +"\nIntensity: " + intensity;
 	        saveUserDataToFile(outputString);
 	        //Reset Text Fields
 	        jobRequesterNameField.setText("");
@@ -169,9 +181,15 @@ public class VehicularCloudFrame extends JFrame {
 	        jobIntensityField.setText("Easy/Medium/Hard");
 	        
 	    }
+	    
 	}
-
-
+	
+    class CompletionTimeListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+        	JOptionPane.showMessageDialog(null, "Completion Time: " + completionTime);
+        }
+    }
+	
   //Creates text fields
     private void createTextFields() {
         DateFormat dateFormat = new SimpleDateFormat("mm/dd/yyyy");
@@ -252,13 +270,13 @@ public class VehicularCloudFrame extends JFrame {
 		}
 	}
 	
-	
 	//Creates the buttons
 	private void createButtons() {
 		vehicleOwnerButton = new JButton("Vehicle Owner");
 		jobRequesterButton = new JButton("Job Requester");
 		vehicleOwnerBackButton = new JButton("Back");
 		jobRequesterBackButton = new JButton("Back");
+		calculateCompletionTimeButton = new JButton("Calculate Completion Time");
 		
 		ActionListener vehicleOwnerListener = new VehicleOwnerListener();
 		vehicleOwnerButton.addActionListener(vehicleOwnerListener);
@@ -271,6 +289,9 @@ public class VehicularCloudFrame extends JFrame {
 		
 		ActionListener jobRequesterBackListener = new ReturnHomeListener();
 		jobRequesterBackButton.addActionListener(jobRequesterBackListener);
+		
+		ActionListener completionTimeButtonListener = new CompletionTimeListener();
+		calculateCompletionTimeButton.addActionListener(completionTimeButtonListener);
 		
 		//Vehicle Owner Submit Button
         vehicleOwnerSubmitButton = new JButton("Submit");
@@ -313,7 +334,8 @@ public class VehicularCloudFrame extends JFrame {
         };
         jobRequesterSubmitButton.addActionListener(jobRequesterSubmitListener);
         
-	}
+    }
+        
 	
 	//Creates the panels
 	private void createPanels() {
@@ -418,7 +440,7 @@ public class VehicularCloudFrame extends JFrame {
 
 		jobRequesterButtonPanel.add(jobRequesterBackButton);
 		jobRequesterButtonPanel.add(jobRequesterSubmitButton); // add to panel
-		
+
 		jobRequesterPanel.add(jobRequesterDescLabel);
 		jobRequesterPanel.add(jobRequesterNamePanel);
 		jobRequesterPanel.add(jobRequesterDOBPanel);
@@ -428,5 +450,6 @@ public class VehicularCloudFrame extends JFrame {
 		jobRequesterPanel.add(jobTypePanel); 		//New
 		jobRequesterPanel.add(jobIntensityPanel); 	//New
 		jobRequesterPanel.add(jobRequesterButtonPanel);
+		jobRequesterPanel.add(calculateCompletionTimeButton);
 	}
 }
