@@ -1,6 +1,11 @@
 public class User {
     public String name;
     public String dateOfBirth;
+    
+    public User(String name, String dob) {
+		this.name = name;
+		this.dateOfBirth = dob;
+	}
 
     public String getName() {
         return name;
