@@ -110,6 +110,10 @@ public class VehicularCloudFrame extends JFrame {
     private Thread serverThread;
     private Queue<String> userInput;
     private JTextArea userInputTextArea;
+    
+    private Queue<Job> tempJobQueue; //new
+    private Queue<String> jobIDQueue; //new
+    private Queue<String> jobNameQueue; //new
 
 
     // Constructor
@@ -141,6 +145,9 @@ public class VehicularCloudFrame extends JFrame {
 		requestType = "";
 		requestStatus = "";
 		vcc = new VCController();
+		tempJobQueue = new LinkedList<Job>(); //new
+		jobIDQueue = new LinkedList<String>(); //new
+		jobNameQueue = new LinkedList<String>(); //new
 		
 		vccFrame = new JFrame();
 		vccLayout = new CardLayout();
@@ -247,14 +254,12 @@ public class VehicularCloudFrame extends JFrame {
 	        
 	        //Add a job to VCC Job Queue 
 	        Job job = new Job(duration, deadline, type, intensity, false, false, 0);
-	        vcc.addJob(job);
+	        tempJobQueue.add(job); //new
 	        
-	        //Get Completion Time and add row to VCC Table
-	        completionTime = "" + job.getCompletionTime();
-	        jobID = id;
-	        jobDuration = "" + job.getDuration();
-	        jobRequesterName = name;
-	        model.addRow(new Object[] {jobRequesterName, jobID, jobDuration, completionTime});
+	        //Get Completion Time
+	        completionTime = "" + (vcc.calculateCompletionTime() + duration); //new
+	        jobIDQueue.add(id); //new
+	        jobNameQueue.add(name); //new
 	        
 	        //Output Job Info to File
 	        String outputString = timestamp + " \nJob Requester: " + name + "\nDOB: " + dob + "\nID: " + id + "\nDuration: " + duration + "\nDeadline: " + deadline + "\nType: " +type +"\nIntensity: " + intensity + "\nCompletion Time: " + completionTime;
@@ -445,17 +450,26 @@ public class VehicularCloudFrame extends JFrame {
 				server.approveData(true);
 				server.respondToClient();
 				saveUserDataToFile(userInput.peek());
+				vcc.addJob(tempJobQueue.peek()); //new
+				model.addRow(new Object[] {jobNameQueue.peek(), jobIDQueue.peek(), tempJobQueue.peek().getDuration(), tempJobQueue.peek().getCompletionTime()}); //new
+				tempJobQueue.remove(); //new
+				jobIDQueue.remove(); //new
+				jobNameQueue.remove(); //new
 				userInput.remove();
 				updateUserInputText();
 			}
 		}
 		
-	//VCC Page Accept Button Listener
+	//VCC Page Reject Button Listener
 		class VCCRejectListener implements ActionListener {
 		    public void actionPerformed(ActionEvent event) {
 		        server.approveData(false);
 		        server.respondToClient();
+		        tempJobQueue.remove(); //new
+				jobIDQueue.remove(); //new
+				jobNameQueue.remove(); //new
 		        userInput.remove();
+		        updateUserInputText(); //new
 		        JOptionPane.showMessageDialog(vccFrame, "Data rejected");
 		    }
 		}
