@@ -114,6 +114,7 @@ public class VehicularCloudFrame extends JFrame {
     private Queue<Job> tempJobQueue; //new
     private Queue<String> jobIDQueue; //new
     private Queue<String> jobNameQueue; //new
+    private Queue<String> requestTypeQueue; //new
 
 
     // Constructor
@@ -148,6 +149,7 @@ public class VehicularCloudFrame extends JFrame {
 		tempJobQueue = new LinkedList<Job>(); //new
 		jobIDQueue = new LinkedList<String>(); //new
 		jobNameQueue = new LinkedList<String>(); //new
+		requestTypeQueue = new LinkedList<String>();
 		
 		vccFrame = new JFrame();
 		vccLayout = new CardLayout();
@@ -193,6 +195,7 @@ public class VehicularCloudFrame extends JFrame {
 	    	date = new Date();
 	    	timestamp = new Timestamp(date.getTime());
 	    	requestType = "vehicle";
+	    	requestTypeQueue.add(requestType);
 	    	
 	        String name = vehicleOwnerNameField.getText();
 	        String dob = vehicleOwnerDOBField.getText();
@@ -243,6 +246,7 @@ public class VehicularCloudFrame extends JFrame {
 	    	date = new Date();
 	    	timestamp = new Timestamp(date.getTime());
 	    	requestType = "job";
+	    	requestTypeQueue.add(requestType);
 	    	
 	        String name = jobRequesterNameField.getText();
 	        String dob = jobRequesterDOBField.getText();
@@ -450,11 +454,14 @@ public class VehicularCloudFrame extends JFrame {
 				server.approveData(true);
 				server.respondToClient();
 				saveUserDataToFile(userInput.peek());
-				vcc.addJob(tempJobQueue.peek()); //new
-				model.addRow(new Object[] {jobNameQueue.peek(), jobIDQueue.peek(), tempJobQueue.peek().getDuration(), tempJobQueue.peek().getCompletionTime()}); //new
-				tempJobQueue.remove(); //new
-				jobIDQueue.remove(); //new
-				jobNameQueue.remove(); //new
+				if(requestTypeQueue.peek().equalsIgnoreCase("job")) {
+					vcc.addJob(tempJobQueue.peek()); //new
+					model.addRow(new Object[] {jobNameQueue.peek(), jobIDQueue.peek(), tempJobQueue.peek().getDuration(), tempJobQueue.peek().getCompletionTime()}); //new
+					tempJobQueue.remove(); //new
+					jobIDQueue.remove(); //new
+					jobNameQueue.remove(); //new
+				}
+				requestTypeQueue.remove();
 				userInput.remove();
 				updateUserInputText();
 			}
@@ -465,9 +472,12 @@ public class VehicularCloudFrame extends JFrame {
 		    public void actionPerformed(ActionEvent event) {
 		        server.approveData(false);
 		        server.respondToClient();
-		        tempJobQueue.remove(); //new
-				jobIDQueue.remove(); //new
-				jobNameQueue.remove(); //new
+				if(requestTypeQueue.peek().equalsIgnoreCase("job")) {
+			        tempJobQueue.remove(); //new
+					jobIDQueue.remove(); //new
+					jobNameQueue.remove(); //new
+				}
+				requestTypeQueue.remove();
 		        userInput.remove();
 		        updateUserInputText(); //new
 		        JOptionPane.showMessageDialog(vccFrame, "Data rejected");
