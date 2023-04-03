@@ -1,8 +1,10 @@
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,10 +16,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 public class VehicularCloudFrame extends JFrame {
     private static final int FRAME_WIDTH = 350;
@@ -32,31 +39,31 @@ public class VehicularCloudFrame extends JFrame {
     private JLabel vehicleOwnerDOBLabel;
     private JLabel jobRequesterDOBLabel;
     private JLabel vehicleOwnerIDLabel;
-    private JLabel vehicleMakeLabel;	//New
-    private JLabel vehicleModelLabel;	//New
-    private JLabel vehicleYearLabel;	//New
-    private JLabel vehicleColorLabel;	//New
-    private JLabel vehicleLicenseLabel;	//New
-    private JLabel vehicleResidencyLabel;//New
+    private JLabel vehicleMakeLabel;	
+    private JLabel vehicleModelLabel;	
+    private JLabel vehicleYearLabel;	
+    private JLabel vehicleColorLabel;	
+    private JLabel vehicleLicenseLabel;	
+    private JLabel vehicleResidencyLabel;
     private JLabel jobRequesterIDLabel;
-    private JLabel jobDurationLabel; 	//New
-    private JLabel jobDeadlineLabel;	//New
-    private JLabel jobTypeLabel; 		//New
-    private JLabel jobIntensityLabel;	//New
+    private JLabel jobDurationLabel; 	
+    private JLabel jobDeadlineLabel;	
+    private JLabel jobTypeLabel; 		
+    private JLabel jobIntensityLabel;	
     private JTextField vehicleOwnerNameField;
     private JTextField jobRequesterNameField;
     private JTextField vehicleOwnerIDField;
-    private JTextField vehicleMakeField;	//New
-    private JTextField vehicleModelField;	//New
-    private JTextField vehicleYearField;	//New
-    private JTextField vehicleColorField;	//New
-    private JTextField vehicleLicenseField;	//New
-    private JTextField vehicleResidencyField;//New
+    private JTextField vehicleMakeField;	
+    private JTextField vehicleModelField;	
+    private JTextField vehicleYearField;	
+    private JTextField vehicleColorField;	
+    private JTextField vehicleLicenseField;	
+    private JTextField vehicleResidencyField;
     private JTextField jobRequesterIDField;
-    private JTextField jobDurationField;	//New
-    private JTextField jobDeadlineField;	//New
-    private JTextField jobTypeField; 		//New
-    private JTextField jobIntensityField;	//New
+    private JTextField jobDurationField;	
+    private JTextField jobDeadlineField;	
+    private JTextField jobTypeField; 		
+    private JTextField jobIntensityField;	
     private JFormattedTextField vehicleOwnerDOBField;
     private JFormattedTextField jobRequesterDOBField;
     private JButton vehicleOwnerButton;
@@ -76,6 +83,7 @@ public class VehicularCloudFrame extends JFrame {
     private Date date;
     private VCController vcc;
     private String completionTime;
+    private String jobRequesterName;
     private String jobID;
     private String jobDuration;
     
@@ -84,11 +92,28 @@ public class VehicularCloudFrame extends JFrame {
     private JPanel vccCardsPanel;
     private DefaultTableModel model;
     private JTable completionTimeTable;
+    private JScrollPane completionTable;
     private JButton vccCompletionTimeButton;
     private JButton vccCompletionTimeBackButton;
+    private JButton vccViewRequestsButton;
+    private JButton vccViewRequestsBackButton;
+    
+    private JButton vccAcceptButton;
+    private JButton vccRejectButton;
+    
+    private String requestType;
+    private String requestStatus;
+    private Client jobClient;
+    private Client vehicleClient;
+    private Server server;
+    private Thread clientThread;
+    private Thread serverThread;
+    private Queue<String> userInput;
+    private JTextArea userInputTextArea;
+
 
     // Constructor
-	public VehicularCloudFrame() throws FileNotFoundException {
+	public VehicularCloudFrame() throws FileNotFoundException, IOException {
 		homeDescLabel = new JLabel("Please click on which type of user you are:");
         vehicleOwnerDescLabel = new JLabel("Please enter the following information:");
         jobRequesterDescLabel = new JLabel("Please enter the following information:");
@@ -97,22 +122,24 @@ public class VehicularCloudFrame extends JFrame {
         vehicleOwnerDOBLabel = new JLabel("Date of Birth: ");
         jobRequesterDOBLabel = new JLabel("Date of Birth: ");
         vehicleOwnerIDLabel = new JLabel("ID Number: ");
-        vehicleMakeLabel = new JLabel("Make: ");				//New
-        vehicleModelLabel = new JLabel("Model ");				//New
-        vehicleYearLabel = new JLabel("Year ");					//New
-        vehicleColorLabel = new JLabel("Color: ");				//New
-        vehicleLicenseLabel = new JLabel("License Plate: ");	//New
-        vehicleResidencyLabel = new JLabel("Residency Time (in hours): "); //New
+        vehicleMakeLabel = new JLabel("Make: ");				
+        vehicleModelLabel = new JLabel("Model ");				
+        vehicleYearLabel = new JLabel("Year ");					
+        vehicleColorLabel = new JLabel("Color: ");				
+        vehicleLicenseLabel = new JLabel("License Plate: ");	
+        vehicleResidencyLabel = new JLabel("Residency Time (in hours): "); 
         jobRequesterIDLabel = new JLabel("ID Number: ");
-        jobDurationLabel = new JLabel("Job Duration (in hours): ");	//New
-        jobDeadlineLabel = new JLabel("Job Deadline: ");			//New
-        jobTypeLabel = new JLabel("Job Type: ");					//New
-        jobIntensityLabel = new JLabel("Job Intensity: ");			//New
+        jobDurationLabel = new JLabel("Job Duration (in hours): ");	
+        jobDeadlineLabel = new JLabel("Job Deadline: ");			
+        jobTypeLabel = new JLabel("Job Type: ");					
+        jobIntensityLabel = new JLabel("Job Intensity: ");			
         layout = new CardLayout();
         cardsPanel = new JPanel(layout);
 		output = new PrintStream(new File("userInformation.txt"));
 		date = new Date();
 		timestamp = new Timestamp(date.getTime());
+		requestType = "";
+		requestStatus = "";
 		vcc = new VCController();
 		
 		vccFrame = new JFrame();
@@ -120,6 +147,17 @@ public class VehicularCloudFrame extends JFrame {
         vccCardsPanel = new JPanel(vccLayout);
         model = new DefaultTableModel();
         completionTimeTable = new JTable(model);
+        userInput = new LinkedList<String>();
+        userInputTextArea = new JTextArea("No Requests Available");
+        
+        completionTable = new JScrollPane(completionTimeTable);
+		completionTable.setPreferredSize(new Dimension(525,400));
+		
+		
+		//Creates new instance of Server and executes thread
+	    server = new Server();
+	    serverThread = new Thread(server);
+	    serverThread.start();
 
         createTextFields();
         createButtons();
@@ -147,19 +185,37 @@ public class VehicularCloudFrame extends JFrame {
 	    public void actionPerformed(ActionEvent event) {
 	    	date = new Date();
 	    	timestamp = new Timestamp(date.getTime());
+	    	requestType = "vehicle";
 	    	
 	        String name = vehicleOwnerNameField.getText();
 	        String dob = vehicleOwnerDOBField.getText();
 	        String id = vehicleOwnerIDField.getText();
-	        String make = vehicleMakeField.getText();	//New
-	        String model = vehicleModelField.getText();	//New
-	        String year = vehicleYearField.getText();	//New
-	        String color = vehicleColorField.getText();	//New
-	        String license= vehicleLicenseField.getText();	//New
-	        String residency = vehicleResidencyField.getText(); //New
+	        String make = vehicleMakeField.getText();	
+	        String model = vehicleModelField.getText();	
+	        String year = vehicleYearField.getText();	
+	        String color = vehicleColorField.getText();	
+	        String license= vehicleLicenseField.getText();	
+	        String residency = vehicleResidencyField.getText(); 
 	        
 	        String outputString = timestamp + " \nVehicle Owner: " + name + "\nDOB: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year + "\nColor: " + color + "\nLicense: " + license + "\nResidency Time: " + residency;
-	        saveUserDataToFile(outputString);
+	        
+	        //Creates an instance of Client class and executes thread
+	        vehicleClient = new Client();
+	        vehicleClient.setOutput(outputString);
+		    Thread clientThread = new Thread(vehicleClient);
+		    clientThread.start();
+		    try {
+				clientThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		    //Adds the request received by the server to a queue
+		    userInput.add(server.getUserData());
+		    updateUserInputText();
+		    
+		    //Outputs a message to the user that data is being processed by server
+		   JOptionPane.showMessageDialog(null, vehicleClient.getProcessingMessage());
+	        
 	        //Reset Text Fields
 	        vehicleOwnerNameField.setText("");
 	        vehicleOwnerDOBField.setText("mm/dd/yyyy");
@@ -179,34 +235,53 @@ public class VehicularCloudFrame extends JFrame {
 	    public void actionPerformed(ActionEvent event) {
 	    	date = new Date();
 	    	timestamp = new Timestamp(date.getTime());
+	    	requestType = "job";
 	    	
 	        String name = jobRequesterNameField.getText();
 	        String dob = jobRequesterDOBField.getText();
 	        String id = jobRequesterIDField.getText();
 	        double duration = Double.parseDouble(jobDurationField.getText());
-	        String deadline = jobDeadlineField.getText();//New
-	        String type = jobTypeField.getText(); 	//New
-	        String intensity = jobIntensityField.getText(); //New
+	        String deadline = jobDeadlineField.getText();
+	        String type = jobTypeField.getText(); 	
+	        String intensity = jobIntensityField.getText(); 
 	        
-	        //Add a job to VCC Job Queue 	
+	        //Add a job to VCC Job Queue 
 	        Job job = new Job(duration, deadline, type, intensity, false, false, 0);
 	        vcc.addJob(job);
 	        
-	        //Get Completion Time and add to VCC Table
+	        //Get Completion Time and add row to VCC Table
 	        completionTime = "" + job.getCompletionTime();
 	        jobID = id;
 	        jobDuration = "" + job.getDuration();
-	        model.addRow(new Object[] {jobID, jobDuration, completionTime});
+	        jobRequesterName = name;
+	        model.addRow(new Object[] {jobRequesterName, jobID, jobDuration, completionTime});
 	        
 	        //Output Job Info to File
 	        String outputString = timestamp + " \nJob Requester: " + name + "\nDOB: " + dob + "\nID: " + id + "\nDuration: " + duration + "\nDeadline: " + deadline + "\nType: " +type +"\nIntensity: " + intensity + "\nCompletion Time: " + completionTime;
-	        saveUserDataToFile(outputString);
+	        
+	        //Creates an instance of Client class and executes thread
+	        jobClient = new Client();
+	        jobClient.setOutput(outputString);
+		    clientThread = new Thread(jobClient);
+		    clientThread.start();
+		    try {
+				clientThread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+	        
+		    //Adds the request received by the server to a queue
+		    userInput.add(server.getUserData());
+		    updateUserInputText();
+		    
+		    //Outputs a message to the user that data is being processed by server
+		    JOptionPane.showMessageDialog(null, jobClient.getProcessingMessage());
 	        
 	        //Reset Text Fields
 	        jobRequesterNameField.setText("");
 	        jobRequesterDOBField.setText("mm/dd/yyyy");
 	        jobRequesterIDField.setText("");
-	        jobDurationField.setText("Hours");
+	        jobDurationField.setText("");
 	        jobDeadlineField.setText("mm/dd/yyyy");
 	        jobTypeField.setText("");
 	        jobIntensityField.setText("Easy/Medium/Hard");
@@ -229,12 +304,35 @@ public class VehicularCloudFrame extends JFrame {
         	vccFrame.setSize(800, 500);
         }
     }
+    
+    //Update User Input Text Method
+    public void updateUserInputText() {
+    	if(userInput.peek() != null) {
+    		userInputTextArea.setText(userInput.peek());
+        	userInputTextArea.revalidate();
+    	}
+    	else {
+    		userInputTextArea.setText("No Requests Available");
+    	}
+    }
+    
+    //VCC View Requests Button Listener
+    class VCCViewRequestsListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+        	vccLayout.show(vccCardsPanel, "viewRequests");
+        	vccFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        	updateUserInputText();
+        }
+    }
 	
     //Creates Table of All Job Completion Times for VCC
     private void createTable() {
+    	
+    	model.addColumn("Job Requester Name");
     	model.addColumn("Job Requester ID");
     	model.addColumn("Job Duration");
     	model.addColumn("Total Completion Time");
+    	
     }
     
     //Creates text fields
@@ -248,18 +346,18 @@ public class VehicularCloudFrame extends JFrame {
         vehicleOwnerDOBField.setColumns(10);
         vehicleOwnerIDField = new JTextField(FIELD_WIDTH);
         vehicleOwnerIDField.setText("");
-        vehicleMakeField = new JTextField(FIELD_WIDTH);	//New
+        vehicleMakeField = new JTextField(FIELD_WIDTH);	
         vehicleMakeField.setText("");
-        vehicleModelField = new JTextField(FIELD_WIDTH);	//New
-        vehicleModelField.setText("");						//New
-        vehicleYearField = new JTextField(FIELD_WIDTH);		//New
-        vehicleYearField.setText("yyyy");					//New
-        vehicleColorField = new JTextField(FIELD_WIDTH);	//New
-        vehicleColorField.setText("");						//New
-        vehicleLicenseField = new JTextField(FIELD_WIDTH);	//New
-        vehicleLicenseField.setText("");					//New
-        vehicleResidencyField = new JTextField(FIELD_WIDTH);//New
-        vehicleResidencyField.setText("Hours");				//New
+        vehicleModelField = new JTextField(FIELD_WIDTH);	
+        vehicleModelField.setText("");						
+        vehicleYearField = new JTextField(FIELD_WIDTH);		
+        vehicleYearField.setText("yyyy");					
+        vehicleColorField = new JTextField(FIELD_WIDTH);	
+        vehicleColorField.setText("");						
+        vehicleLicenseField = new JTextField(FIELD_WIDTH);	
+        vehicleLicenseField.setText("");					
+        vehicleResidencyField = new JTextField(FIELD_WIDTH);
+        vehicleResidencyField.setText("Hours");				
 
        
         //Job Requester Text Fields
@@ -270,14 +368,14 @@ public class VehicularCloudFrame extends JFrame {
         jobRequesterDOBField.setColumns(10);
         jobRequesterIDField = new JTextField(FIELD_WIDTH);
         jobRequesterIDField.setText("");
-        jobDurationField = new JTextField(FIELD_WIDTH);	//New
-        jobDurationField.setText("Hours");				//New
-        jobDeadlineField = new JTextField(FIELD_WIDTH);	//New
-        jobDeadlineField.setText("mm/dd/yyyy");			//New
-        jobTypeField = new JTextField(FIELD_WIDTH);		//New
-        jobTypeField.setText("");						//New
-        jobIntensityField = new JTextField(FIELD_WIDTH);//New
-        jobIntensityField.setText("Easy/Medium/Hard");	//New
+        jobDurationField = new JTextField(FIELD_WIDTH);	
+        jobDurationField.setText("");				
+        jobDeadlineField = new JTextField(FIELD_WIDTH);	
+        jobDeadlineField.setText("mm/dd/yyyy");			
+        jobTypeField = new JTextField(FIELD_WIDTH);		
+        jobTypeField.setText("");						
+        jobIntensityField = new JTextField(FIELD_WIDTH);
+        jobIntensityField.setText("Easy/Medium/Hard");	
         jobIntensityField.setColumns(12);
     }
     
@@ -289,12 +387,12 @@ public class VehicularCloudFrame extends JFrame {
 			vehicleOwnerNameField.setText("");
 			vehicleOwnerDOBField.setText("mm/dd/yyyy");
 			vehicleOwnerIDField.setText("");
-	        vehicleMakeField.setText("");		//New
-	        vehicleModelField.setText("");		//New
-	        vehicleYearField.setText("yyyy");	//New
-	        vehicleColorField.setText("");		//New
-	        vehicleLicenseField.setText("");	//New
-	        vehicleResidencyField.setText("Hours");//New
+	        vehicleMakeField.setText("");		
+	        vehicleModelField.setText("");		
+	        vehicleYearField.setText("yyyy");	
+	        vehicleColorField.setText("");		
+	        vehicleLicenseField.setText("");	
+	        vehicleResidencyField.setText("Hours");
 		}
 	}
 	
@@ -307,10 +405,10 @@ public class VehicularCloudFrame extends JFrame {
 			jobRequesterNameField.setText("");
 			jobRequesterDOBField.setText("mm/dd/yyyy");
 			jobRequesterIDField.setText("");
-			jobDurationField.setText("Hours");				//New
-			jobDeadlineField.setText("mm/dd/yyyy");			//New
-			jobTypeField.setText("");						//New
-			jobIntensityField.setText("Easy/Medium/Hard");	//New
+			jobDurationField.setText("");				
+			jobDeadlineField.setText("mm/dd/yyyy");			
+			jobTypeField.setText("");						
+			jobIntensityField.setText("Easy/Medium/Hard");	
 		}
 	}
 
@@ -323,9 +421,34 @@ public class VehicularCloudFrame extends JFrame {
 		    vccFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		    vccFrame.setVisible(true);
 		    vccLayout.show(vccCardsPanel, "home");
-		    
 		}
 	}
+	
+	//VCC Page Accept Button Listener
+		class VCCAcceptListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				server.approveData(true);
+				server.respondToClient();
+				saveUserDataToFile(userInput.peek());
+				userInput.remove();
+				updateUserInputText();
+			}
+		}
+		
+	//VCC Page Accept Button Listener
+	//NEEDS TO BE PROPERLY DEFINED
+			class VCCRejectListener implements ActionListener {
+				public void actionPerformed(ActionEvent event) {
+			        vccFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+			        vccFrame.setTitle("Vehicular Cloud Controller");
+			        vccFrame.setLocationRelativeTo(null);
+				    vccFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+				    vccFrame.setVisible(true);
+				    vccLayout.show(vccCardsPanel, "home");
+				    
+				}
+			}
+
 	
 	//Return to Main Home Page Listener
 	class ReturnHomeListener implements ActionListener {
@@ -342,6 +465,7 @@ public class VehicularCloudFrame extends JFrame {
 		}
 	}
 	
+	
 	//Creates the buttons
 	private void createButtons() {
 		vehicleOwnerButton = new JButton("Vehicle Owner");
@@ -352,6 +476,13 @@ public class VehicularCloudFrame extends JFrame {
 		calculateCompletionTimeButton = new JButton("Calculate Completion Time");
 		vccCompletionTimeButton = new JButton("Calculate All Completion Times");
 		vccCompletionTimeBackButton = new JButton("Back");
+		vccViewRequestsButton = new JButton("View Requests");
+		vccViewRequestsBackButton = new JButton("Back");
+		
+		
+		//UPDATED- Creates accept/reject buttons within VCController
+		vccAcceptButton = new JButton("Accept");
+		vccRejectButton = new JButton("Reject");
 		
 		ActionListener vehicleOwnerListener = new VehicleOwnerListener();
 		vehicleOwnerButton.addActionListener(vehicleOwnerListener);
@@ -377,6 +508,21 @@ public class VehicularCloudFrame extends JFrame {
 		ActionListener vccCompletionTimeBackListener = new ReturnVCCHomeListener();
 		vccCompletionTimeBackButton.addActionListener(vccCompletionTimeBackListener);
 		
+		ActionListener vccViewRequestsButtonListener = new VCCViewRequestsListener();
+		vccViewRequestsButton.addActionListener(vccViewRequestsButtonListener);
+		
+		ActionListener vccViewRequestsBackListener = new ReturnVCCHomeListener();
+		vccViewRequestsBackButton.addActionListener(vccViewRequestsBackListener);
+		
+		
+		//UPDATED- Adds action listeners to accept/reject buttons
+		ActionListener vccAcceptListener = new VCCAcceptListener();
+		vccAcceptButton.addActionListener(vccAcceptListener);
+
+		ActionListener vccRejectListener = new VCCListener();
+		vccRejectButton.addActionListener(vccRejectListener);
+		
+		
 		//Vehicle Owner Submit Button
         vehicleOwnerSubmitButton = new JButton("Submit");
         ActionListener vehicleOwnerSubmitListener = new ActionListener() {
@@ -385,12 +531,12 @@ public class VehicularCloudFrame extends JFrame {
                 String name = vehicleOwnerNameField.getText();
                 String dob = vehicleOwnerDOBField.getText();
                 String id = vehicleOwnerIDField.getText();
-                String make = vehicleMakeField.getText();				//New
-    	        String model = vehicleModelField.getText();				//New
-    	        String year = vehicleYearField.getText();				//New
-    	        String color = vehicleColorField.getText();				//New
-    	        String license = vehicleLicenseField.getText();			//New
-    	        String residency = vehicleResidencyField.getText();		//New
+                String make = vehicleMakeField.getText();				
+    	        String model = vehicleModelField.getText();				
+    	        String year = vehicleYearField.getText();				
+    	        String color = vehicleColorField.getText();				
+    	        String license = vehicleLicenseField.getText();			
+    	        String residency = vehicleResidencyField.getText();		
 
                 
                 String outputString = timestamp.toString() + "Vehicle Owner: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nMake: " + make + "\nModel: " + model + "\nYear: " + year 
@@ -408,10 +554,10 @@ public class VehicularCloudFrame extends JFrame {
                 String name = jobRequesterNameField.getText();
                 String dob = jobRequesterDOBField.getText();
                 String id = jobRequesterIDField.getText();
-                String duration = jobDurationField.getText(); 	//New
-    	        String deadline = jobDeadlineField.getText();	//New
-    	        String type = jobTypeField.getText(); 			//New
-    	        String intensity = jobIntensityField.getText(); //New
+                String duration = jobDurationField.getText(); 	
+    	        String deadline = jobDeadlineField.getText();	
+    	        String type = jobTypeField.getText(); 			
+    	        String intensity = jobIntensityField.getText(); 
                 String outputString = timestamp.toString() + "Job Requester: " + name + "\nDate of Birth: " + dob + "\nID: " + id + "\nJob Duration: " + duration 
                 		+ "\nJob Deadline: " + deadline + "\nJob Type: " + type + "\nJob Intensity: " + intensity;
             }
@@ -434,18 +580,20 @@ public class VehicularCloudFrame extends JFrame {
 		JPanel jobRequesterIDPanel = new JPanel();
 		JPanel vehicleOwnerButtonPanel = new JPanel();
 		JPanel jobRequesterButtonPanel = new JPanel();
-	    JPanel jobDurationPanel = new JPanel(); //New
-	    JPanel jobDeadlinePanel = new JPanel();//New
-	    JPanel jobTypePanel = new JPanel(); 	//New
-	    JPanel jobIntensityPanel = new JPanel(); //New
-	    JPanel vehicleMakePanel = new JPanel();	//New
-	    JPanel vehicleModelPanel = new JPanel();	//New
-	    JPanel vehicleYearPanel = new JPanel();	//New
-	    JPanel vehicleColorPanel = new JPanel();	//New
-	    JPanel vehicleLicensePanel = new JPanel();	//New
-	    JPanel vehicleResidencyPanel = new JPanel();//New
+	    JPanel jobDurationPanel = new JPanel(); 
+	    JPanel jobDeadlinePanel = new JPanel();
+	    JPanel jobTypePanel = new JPanel(); 	
+	    JPanel jobIntensityPanel = new JPanel(); 
+	    JPanel vehicleMakePanel = new JPanel();	
+	    JPanel vehicleModelPanel = new JPanel();	
+	    JPanel vehicleYearPanel = new JPanel();	
+	    JPanel vehicleColorPanel = new JPanel();	
+	    JPanel vehicleLicensePanel = new JPanel();	
+	    JPanel vehicleResidencyPanel = new JPanel();
 	    JPanel vccHomePanel = new JPanel();
 	    JPanel vccCompletionTimePanel = new JPanel();
+	    JPanel vccViewRequestsPanel = new JPanel();
+	    JPanel vccRequestsButtonPanel = new JPanel();
 		
 		cardsPanel.add(homePanel, "home");
 		cardsPanel.add(vehicleOwnerPanel, "vehicleOwner");
@@ -454,6 +602,7 @@ public class VehicularCloudFrame extends JFrame {
 		
 		vccCardsPanel.add(vccHomePanel, "home");
 		vccCardsPanel.add(vccCompletionTimePanel, "completionTime");
+		vccCardsPanel.add(vccViewRequestsPanel, "viewRequests");
 		vccFrame.add(vccCardsPanel);
 		
 		//Home Screen Panel
@@ -491,7 +640,7 @@ public class VehicularCloudFrame extends JFrame {
 		vehicleResidencyPanel.add(vehicleResidencyField);
 		
 		vehicleOwnerButtonPanel.add(vehicleOwnerBackButton);
-		vehicleOwnerButtonPanel.add(vehicleOwnerSubmitButton); // add to panel
+		vehicleOwnerButtonPanel.add(vehicleOwnerSubmitButton);
 		
 		vehicleOwnerPanel.add(vehicleOwnerDescLabel);
 		vehicleOwnerPanel.add(vehicleOwnerNamePanel);
@@ -516,38 +665,44 @@ public class VehicularCloudFrame extends JFrame {
 		jobRequesterIDPanel.add(jobRequesterIDLabel);
 		jobRequesterIDPanel.add(jobRequesterIDField);
 		
-		jobDurationPanel.add(jobDurationLabel); //New
-		jobDurationPanel.add(jobDurationField); //New
+		jobDurationPanel.add(jobDurationLabel); 
+		jobDurationPanel.add(jobDurationField); 
 		
-		jobDeadlinePanel.add(jobDeadlineLabel);  //New
-		jobDeadlinePanel.add(jobDeadlineField);  //New
+		jobDeadlinePanel.add(jobDeadlineLabel);  
+		jobDeadlinePanel.add(jobDeadlineField);  
 		
-		jobTypePanel.add(jobTypeLabel);  //New
-		jobTypePanel.add(jobTypeField);  //New
+		jobTypePanel.add(jobTypeLabel);  
+		jobTypePanel.add(jobTypeField);  
 		
 		
-		jobIntensityPanel.add(jobIntensityLabel);  //New
-		jobIntensityPanel.add(jobIntensityField);  //New
+		jobIntensityPanel.add(jobIntensityLabel);  
+		jobIntensityPanel.add(jobIntensityField); 
 
 		jobRequesterButtonPanel.add(jobRequesterBackButton);
-		jobRequesterButtonPanel.add(jobRequesterSubmitButton); // add to panel
+		jobRequesterButtonPanel.add(jobRequesterSubmitButton);
 
 		jobRequesterPanel.add(jobRequesterDescLabel);
 		jobRequesterPanel.add(jobRequesterNamePanel);
 		jobRequesterPanel.add(jobRequesterDOBPanel);
 		jobRequesterPanel.add(jobRequesterIDPanel);
-		jobRequesterPanel.add(jobDurationPanel);	 //New
-		jobRequesterPanel.add(jobDeadlinePanel);	//New
-		jobRequesterPanel.add(jobTypePanel); 		//New
-		jobRequesterPanel.add(jobIntensityPanel); 	//New
+		jobRequesterPanel.add(jobDurationPanel);	
+		jobRequesterPanel.add(jobDeadlinePanel);	
+		jobRequesterPanel.add(jobTypePanel); 		
+		jobRequesterPanel.add(jobIntensityPanel); 	
 		jobRequesterPanel.add(jobRequesterButtonPanel);
 		jobRequesterPanel.add(calculateCompletionTimeButton);
 		
 		//VCC Panels
 		vccHomePanel.add(vccCompletionTimeButton);
-		vccCompletionTimePanel.add(new JScrollPane(completionTimeTable));
+		vccHomePanel.add(vccViewRequestsButton);
+		vccCompletionTimePanel.add(completionTable);
 		vccCompletionTimePanel.add(vccCompletionTimeBackButton);
 		
-		
+		//Added separate panel to view user requests
+		vccViewRequestsPanel.add(userInputTextArea);
+		vccRequestsButtonPanel.add(vccAcceptButton); //not properly defined, currently does the same thing as the back button
+		vccRequestsButtonPanel.add(vccRejectButton); //not properly defined, currently does the same thing as the back button
+		vccRequestsButtonPanel.add(vccViewRequestsBackButton);
+		vccViewRequestsPanel.add(vccRequestsButtonPanel);
 	}
 }
