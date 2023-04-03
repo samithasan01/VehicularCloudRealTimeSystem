@@ -30,7 +30,7 @@ public class VehicularCloudFrame extends JFrame {
     private static final int FRAME_WIDTH = 350;
     private static final int FRAME_HEIGHT = 500;
     private static final int FIELD_WIDTH = 10;
-
+    private JTextField dialogueBox;
     private JLabel homeDescLabel;
     private JLabel vehicleOwnerDescLabel;
     private JLabel jobRequesterDescLabel;
@@ -177,7 +177,7 @@ public class VehicularCloudFrame extends JFrame {
 	    output.println(userData);
 	    output.println();
 		String currentDir = System.getProperty("user.dir");
-		JOptionPane.showMessageDialog(this, "User data saved successfully!\n\n Current working directory:" + currentDir);
+		JOptionPane.showMessageDialog(this, "Data Accepted!\n\n Current working directory:" + currentDir);
 	}
 
 	//Register Vehicle Button Listener
@@ -377,6 +377,21 @@ public class VehicularCloudFrame extends JFrame {
         jobIntensityField = new JTextField(FIELD_WIDTH);
         jobIntensityField.setText("Easy/Medium/Hard");	
         jobIntensityField.setColumns(12);
+        
+        //dialogueBox Text field
+        dialogueBox = new JTextField(FIELD_WIDTH);
+        
+        boolean jobAccepted = false;// Change to true for accepted job
+        
+        //Show a dialogue box indicating whether the job was accepted or rejected
+        //dialogueBox accept or reject text
+        if(jobAccepted) {
+        	dialogueBox.setText("Your job request has been accepted");
+        }
+        else {
+        	dialogueBox.setText("Your job request has been declined");
+        	
+        }
     }
     
     //Vehicle Owner Page Button Listener
