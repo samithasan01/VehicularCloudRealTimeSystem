@@ -436,18 +436,15 @@ public class VehicularCloudFrame extends JFrame {
 		}
 		
 	//VCC Page Accept Button Listener
-	//NEEDS TO BE PROPERLY DEFINED
-			class VCCRejectListener implements ActionListener {
-				public void actionPerformed(ActionEvent event) {
-			        vccFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-			        vccFrame.setTitle("Vehicular Cloud Controller");
-			        vccFrame.setLocationRelativeTo(null);
-				    vccFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-				    vccFrame.setVisible(true);
-				    vccLayout.show(vccCardsPanel, "home");
-				    
-				}
-			}
+		class VCCRejectListener implements ActionListener {
+		    public void actionPerformed(ActionEvent event) {
+		        server.approveData(false);
+		        server.respondToClient();
+		        userInput.remove();
+		        JOptionPane.showMessageDialog(vccFrame, "Data rejected");
+		    }
+		}
+
 
 	
 	//Return to Main Home Page Listener
@@ -519,7 +516,7 @@ public class VehicularCloudFrame extends JFrame {
 		ActionListener vccAcceptListener = new VCCAcceptListener();
 		vccAcceptButton.addActionListener(vccAcceptListener);
 
-		ActionListener vccRejectListener = new VCCListener();
+		ActionListener vccRejectListener = new VCCRejectListener();
 		vccRejectButton.addActionListener(vccRejectListener);
 		
 		
