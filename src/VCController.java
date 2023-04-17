@@ -65,4 +65,11 @@ public class VCController {
 		
 	}
 	
+public int calculateResidencyTime(){
+	int residencyTime = 0;
+	for(Vehicle vehicle: vehicleList) {
+		residencyTime += vehicle.getResidencyTime();
+	}
+	return residencyTime;
+}
 }
