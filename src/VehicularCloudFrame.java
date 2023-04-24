@@ -264,16 +264,27 @@ public class VehicularCloudFrame extends JFrame {
         jobRequesterSubmitButton.addActionListener(new JobRequesterSubmitListener());
     }
 
+	//Displays Processing Message to User
+	private void displayProcessingMessage(String message) { //newUpdate
+		JOptionPane.showMessageDialog(this, message); //newUpdate
+	}
+	
+	//Displays Request Rejected Message to User
+	private void displayRejectionMessage(String userID) { //newUpdate
+		JOptionPane.showMessageDialog(this, "User " + userID + ": Data Rejected"); //newUpdate
+	}
+	
 	//Saves Vehicle to a Database
-	private void saveVehicleToDatabase() { //new
+	private void saveVehicleToDatabase(String userID) { //newUpdate
 	    database.addVehicle(tempVehicleQueue.peek(), vehicleNameQueue.peek(), vehicleIDQueue.peek(), vehicleDOBQueue.peek(), vehicleTimeStampQueue.peek()); //new
-		JOptionPane.showMessageDialog(this, "Data Accepted and Stored in Database!"); //new
+		JOptionPane.showMessageDialog(this, "User " + userID + ": Data Accepted and Stored in Database!"); //newUpdate
 	}
 	
 	//Saves Job to a Database
-	private void saveJobToDatabase() { //new
+	private void saveJobToDatabase(String userID) { //newUpdate
+		System.out.println(jobTimeStampQueue.peek());
 	    database.addJob(tempJobQueue.peek(), jobNameQueue.peek(), jobIDQueue.peek(), jobDOBQueue.peek(), jobTimeStampQueue.peek()); //new
-		JOptionPane.showMessageDialog(this, "Data Accepted and Stored in Database!"); //new
+		JOptionPane.showMessageDialog(this, "User " + userID + ": Data Accepted and Stored in Database!"); //newUpdate
 	}
 
 	//Register Vehicle Button Listener
@@ -325,7 +336,7 @@ public class VehicularCloudFrame extends JFrame {
 		    updateUserInputText();
 		    
 		    //Outputs a message to the user that data is being processed by server
-		   JOptionPane.showMessageDialog(null, vehicleClient.getProcessingMessage());
+		    displayProcessingMessage(vehicleClient.getProcessingMessage());//newUpdate
 	        
 	        //Reset Text Fields
 	        vehicleOwnerNameField.setText("");
@@ -411,7 +422,7 @@ public class VehicularCloudFrame extends JFrame {
 		    updateUserInputText();
 		    
 		    //Outputs a message to the user that data is being processed by server
-		    JOptionPane.showMessageDialog(null, jobClient.getProcessingMessage());
+		    displayProcessingMessage(jobClient.getProcessingMessage());//newUpdate
 	        
 	        //Reset Text Fields
 	        jobRequesterNameField.setText("");
@@ -608,7 +619,7 @@ public class VehicularCloudFrame extends JFrame {
 				server.approveData(true);
 				server.respondToClient();
 				if(requestTypeQueue.peek().equalsIgnoreCase("job")) {
-					saveJobToDatabase();//new
+					saveJobToDatabase(jobIDQueue.peek());//newUpdate
 					vcc.addJob(tempJobQueue.peek());
 					model1.addRow(new Object[] {jobNameQueue.peek(), jobIDQueue.peek(), tempJobQueue.peek().getDuration(), tempJobQueue.peek().getCompletionTime()}); //new
 					tempJobQueue.remove();
@@ -618,7 +629,7 @@ public class VehicularCloudFrame extends JFrame {
 					jobTimeStampQueue.remove(); //new
 				}
 				else if(requestTypeQueue.peek().equalsIgnoreCase("vehicle")) {
-					saveVehicleToDatabase(); //new
+					saveVehicleToDatabase(vehicleIDQueue.peek()); //newUpdate
 					vcc.addVehicle(tempVehicleQueue.peek());
 					model2.addRow(new Object[] {vehicleNameQueue.peek(), vehicleIDQueue.peek(), tempVehicleQueue.peek().getResidencyTime()});//
 					tempVehicleQueue.remove();//
@@ -659,6 +670,7 @@ public class VehicularCloudFrame extends JFrame {
 		        server.approveData(false);
 		        server.respondToClient();
 				if(requestTypeQueue.peek().equalsIgnoreCase("job")) {
+					displayRejectionMessage(jobIDQueue.peek());//newUpdate
 			        tempJobQueue.remove(); //new
 					jobIDQueue.remove(); //new
 					jobNameQueue.remove(); //new
@@ -666,6 +678,7 @@ public class VehicularCloudFrame extends JFrame {
 					jobTimeStampQueue.remove(); //new
 				}
 				else if(requestTypeQueue.peek().equalsIgnoreCase("vehicle")) {
+					displayRejectionMessage(vehicleIDQueue.peek());//newUpdate
 					tempVehicleQueue.remove(); //new
 					vehicleIDQueue.remove(); //new
 					vehicleNameQueue.remove(); //new
@@ -675,7 +688,6 @@ public class VehicularCloudFrame extends JFrame {
 				requestTypeQueue.remove();
 		        userInput.remove();
 		        updateUserInputText(); //new
-		        JOptionPane.showMessageDialog(vccFrame, "Data rejected");
 		    }
 		}
 
@@ -700,7 +712,6 @@ public class VehicularCloudFrame extends JFrame {
 
 	//Creates the buttons
 	private void createButtons() {
-		private void createButtons() {
 		vehicleOwnerButton = new JButton("Vehicle Owner");
 		vehicleOwnerButton.setBackground(Color.WHITE);
 		vehicleOwnerButton.setForeground(Color.decode("#68AAC3"));
@@ -1021,18 +1032,6 @@ public class VehicularCloudFrame extends JFrame {
 		jobRequesterPanel.add(jobIntensityLabel, jrp);
 		jrp.gridx = 1;
 		jobRequesterPanel.add(jobIntensityField, jrp);
-
-		jrp.gridx = 0;
-		jrp.gridy = 8;
-		jobRequesterPanel.add(vehicleLicenseLabel, jrp);
-		jrp.gridx = 1;
-		jobRequesterPanel.add(vehicleLicenseField, jrp);
-
-		jrp.gridx = 0;
-		jrp.gridy = 9;
-		jobRequesterPanel.add(vehicleResidencyLabel, jrp);
-		jrp.gridx = 1;
-		jobRequesterPanel.add(vehicleResidencyField, jrp);
 
 		jrp.gridx = 0;
 		jrp.gridy = 10;
