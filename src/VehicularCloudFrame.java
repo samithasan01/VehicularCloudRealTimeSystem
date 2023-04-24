@@ -230,7 +230,7 @@ public class VehicularCloudFrame extends JFrame {
 
         userInput = new LinkedList<String>();
         userInputTextArea = new JTextArea("No Requests Available");
-        userInputTextArea.setBackground(Color.decode("#68AAC3"));
+        userInputTextArea.setBackground(Color.decode("#0C63D5"));
         userInputTextArea.setForeground(Color.WHITE);
         userInputTextArea.setFont(new Font("Ariel", Font.BOLD, 15));
         
@@ -714,53 +714,53 @@ public class VehicularCloudFrame extends JFrame {
 	private void createButtons() {
 		vehicleOwnerButton = new JButton("Vehicle Owner");
 		vehicleOwnerButton.setBackground(Color.WHITE);
-		vehicleOwnerButton.setForeground(Color.decode("#68AAC3"));
+		vehicleOwnerButton.setForeground(Color.decode("#0C63D5"));
 		
 		jobRequesterButton = new JButton("Job Requester");
 		jobRequesterButton.setBackground(Color.WHITE);
-		jobRequesterButton.setForeground(Color.decode("#68AAC3"));
+		jobRequesterButton.setForeground(Color.decode("#0C63D5"));
 		
 		vccButton = new JButton("Admin");
 		vccButton.setBackground(Color.WHITE);
-		vccButton.setForeground(Color.decode("#68AAC3"));
+		vccButton.setForeground(Color.decode("#0C63D5"));
 		
 		vehicleOwnerBackButton = new JButton("Back");
 		vehicleOwnerBackButton.setBackground(Color.WHITE);
-		vehicleOwnerBackButton.setForeground(Color.decode("#68AAC3"));
+		vehicleOwnerBackButton.setForeground(Color.decode("#0C63D5"));
 		
 		jobRequesterBackButton = new JButton("Back");
 		jobRequesterBackButton.setBackground(Color.WHITE);
-		jobRequesterBackButton.setForeground(Color.decode("#68AAC3"));
+		jobRequesterBackButton.setForeground(Color.decode("#0C63D5"));
 		
 		calculateCompletionTimeButton = new JButton("Calculate Completion Time");
 		calculateCompletionTimeButton.setBackground(Color.WHITE);
-		calculateCompletionTimeButton.setForeground(Color.decode("#68AAC3"));
+		calculateCompletionTimeButton.setForeground(Color.decode("#0C63D5"));
 		
 		vccJobCompletionTimeButton = new JButton("Calculate All Completion Times");
 		vccJobCompletionTimeButton.setBackground(Color.WHITE);
-		vccJobCompletionTimeButton.setForeground(Color.decode("#68AAC3"));
+		vccJobCompletionTimeButton.setForeground(Color.decode("#0C63D5"));
 		
 		vccJobCompletionTimeBackButton = new JButton("Back");
 		vccJobCompletionTimeBackButton.setBackground(Color.WHITE);
-		vccJobCompletionTimeBackButton.setForeground(Color.decode("#68AAC3"));
+		vccJobCompletionTimeBackButton.setForeground(Color.decode("#0C63D5"));
 		
 		vccViewRequestsButton = new JButton("View Requests");
 		vccViewRequestsButton.setBackground(Color.WHITE);
-		vccViewRequestsButton.setForeground(Color.decode("#68AAC3"));
+		vccViewRequestsButton.setForeground(Color.decode("#0C63D5"));
 		
 		vccViewRequestsBackButton = new JButton("Back");
 		vccViewRequestsBackButton.setBackground(Color.WHITE);
-		vccViewRequestsBackButton.setForeground(Color.decode("#68AAC3"));
+		vccViewRequestsBackButton.setForeground(Color.decode("#0C63D5"));
 		
 		
 		//UPDATED- Creates accept/reject buttons within VCController
 		vccAcceptButton = new JButton("Accept");
 		vccAcceptButton.setBackground(Color.WHITE);
-		vccAcceptButton.setForeground(Color.decode("#68AAC3"));
+		vccAcceptButton.setForeground(Color.decode("#0C63D5"));
 		
 		vccRejectButton = new JButton("Reject");
 		vccRejectButton.setBackground(Color.WHITE);
-		vccRejectButton.setForeground(Color.decode("#68AAC3"));
+		vccRejectButton.setForeground(Color.decode("#0C63D5"));
 		
 		ActionListener vehicleOwnerListener = new VehicleOwnerListener();
 		vehicleOwnerButton.addActionListener(vehicleOwnerListener);
@@ -811,7 +811,7 @@ public class VehicularCloudFrame extends JFrame {
 		//Vehicle Owner Submit Button
         vehicleOwnerSubmitButton = new JButton("Submit");
         vehicleOwnerSubmitButton.setBackground(Color.WHITE);
-        vehicleOwnerSubmitButton.setForeground(Color.decode("#68AAC3"));
+        vehicleOwnerSubmitButton.setForeground(Color.decode("#0C63D5"));
         ActionListener vehicleOwnerSubmitListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -836,7 +836,7 @@ public class VehicularCloudFrame extends JFrame {
         //Job Requester Submit Button
         jobRequesterSubmitButton = new JButton("Submit");
         jobRequesterSubmitButton.setBackground(Color.WHITE);
-        jobRequesterSubmitButton.setForeground(Color.decode("#68AAC3"));
+        jobRequesterSubmitButton.setForeground(Color.decode("#0C63D5"));
         ActionListener jobRequesterSubmitListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -867,6 +867,11 @@ public class VehicularCloudFrame extends JFrame {
 	    JPanel vccCompletionTimePanel = new JPanel();
 	    JPanel vccViewRequestsPanel = new JPanel();
 	    JPanel vccRequestsButtonPanel = new JPanel();
+	    ImageIcon logo = new ImageIcon("C:\\Users\\gregk\\eclipse\\logo.png");
+	    JLabel imageLabel = new JLabel(logo);
+	    int imageWidth = 500;
+	    int imageHeight = 100;
+	    logo.setImage(logo.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH)); // Resize the image
 	    vehicleOwnerButton.setPreferredSize(new Dimension(200, 30));
 	    jobRequesterButton.setPreferredSize(new Dimension(200, 30));
 	    vccButton.setPreferredSize(new Dimension(200, 30));
@@ -885,16 +890,16 @@ public class VehicularCloudFrame extends JFrame {
 		vccFrame.add(vccCardsPanel);
 		
 		//Home Screen Panel
-		homePanel.add(homeDescLabel);
+		homePanel.add(imageLabel);
 		homePanel.add(vehicleOwnerButton);
 		homePanel.add(jobRequesterButton);
 		homePanel.add(vccButton);
-		homePanel.setBackground(Color.decode("#68AAC3"));
-		vehicleOwnerPanel.setBackground(Color.decode("#68AAC3"));
-		jobRequesterPanel.setBackground(Color.decode("#68AAC3"));
-		vccHomePanel.setBackground(Color.decode("#68AAC3"));
-		vccCompletionTimePanel.setBackground(Color.decode("#68AAC3"));
-		vccViewRequestsPanel.setBackground(Color.decode("#68AAC3"));
+		homePanel.setBackground(Color.decode("#0C63D5"));
+		vehicleOwnerPanel.setBackground(Color.decode("#0C63D5"));
+		jobRequesterPanel.setBackground(Color.decode("#0C63D5"));
+		vccHomePanel.setBackground(Color.decode("#0C63D5"));
+		vccCompletionTimePanel.setBackground(Color.decode("#0C63D5"));
+		vccViewRequestsPanel.setBackground(Color.decode("#0C63D5"));
 		
 		//Vehicle Owner Panels
 		vehicleOwnerPanel.setLayout(new GridBagLayout());
@@ -974,7 +979,7 @@ public class VehicularCloudFrame extends JFrame {
 
 		vehicleOwnerButtonPanel.add(vehicleOwnerBackButton);
 		vehicleOwnerButtonPanel.add(vehicleOwnerSubmitButton);
-		vehicleOwnerButtonPanel.setBackground(Color.decode("#68AAC3"));
+		vehicleOwnerButtonPanel.setBackground(Color.decode("#0C63D5"));
 		
 		//Job Requester Panels
 		jobRequesterPanel.setLayout(new GridBagLayout());
@@ -1043,7 +1048,7 @@ public class VehicularCloudFrame extends JFrame {
 		jobRequesterButtonPanel.add(jobRequesterBackButton);
 		jobRequesterButtonPanel.add(jobRequesterSubmitButton);
 		jobRequesterButtonPanel.add(calculateCompletionTimeButton);
-		jobRequesterButtonPanel.setBackground(Color.decode("#68AAC3"));
+		jobRequesterButtonPanel.setBackground(Color.decode("#0C63D5"));
 		
 		//VCC Panels
 		vccHomePanel.add(vccJobCompletionTimeButton);//
@@ -1052,7 +1057,7 @@ public class VehicularCloudFrame extends JFrame {
 		vccHomePanel.add(vccViewRequestsButton);
 		vccCompletionTimePanel.add(jobCompletionTable);//
 		vccCompletionTimePanel.add(vehicleResidencyTable);//
-		vccHomePanel.setBackground(Color.decode("#68AAC3"));
+		vccHomePanel.setBackground(Color.decode("#0C63D5"));
 
 		vccCompletionTimePanel.add(vccJobCompletionTimeBackButton);//
 		//vccCompletionTimePanel.add(vccVehicleResidencyTimeBackButton);//
@@ -1064,7 +1069,7 @@ public class VehicularCloudFrame extends JFrame {
 		vccRequestsButtonPanel.add(vccRejectButton); 
 		vccRequestsButtonPanel.add(vccViewRequestsBackButton);
 		vccViewRequestsPanel.add(vccRequestsButtonPanel);
-		vccRequestsButtonPanel.setBackground(Color.decode("#68AAC3"));
-		vccViewRequestsPanel.setBackground(Color.decode("#68AAC3"));
+		vccRequestsButtonPanel.setBackground(Color.decode("#0C63D5"));
+		vccViewRequestsPanel.setBackground(Color.decode("#0C63D5"));
 	}
 }
