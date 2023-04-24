@@ -19,17 +19,22 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AttributeSet.ColorAttribute;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
+import javax.swing.*;
+import java.awt.*;
 
 
 public class VehicularCloudFrame extends JFrame {
-    private static final int FRAME_WIDTH = 350;
+    private static final int FRAME_WIDTH = 500;
     private static final int FRAME_HEIGHT = 500;
     private static final int FIELD_WIDTH = 10;
+	
     private JTextField dialogueBox;
     private JLabel homeDescLabel;
     private JLabel vehicleOwnerDescLabel;
@@ -138,8 +143,15 @@ public class VehicularCloudFrame extends JFrame {
 
 	private Database database; //new
 
+  public void setLabelFont(JLabel label, int size) {
+	    Font font = new Font("SansSerif", Font.BOLD, size);
+	    label.setFont(font);
+	    label.setForeground(Color.decode("#FFFFFF"));
+	}
+
     // Constructor
-	public VehicularCloudFrame() throws FileNotFoundException, IOException {
+	public VehicularCloudFrame() throws FileNotFoundException {
+
 		homeDescLabel = new JLabel("Please click on which type of user you are:");
         vehicleOwnerDescLabel = new JLabel("Please enter the following information:");
         jobRequesterDescLabel = new JLabel("Please enter the following information:");
@@ -148,17 +160,37 @@ public class VehicularCloudFrame extends JFrame {
         vehicleOwnerDOBLabel = new JLabel("Date of Birth: ");
         jobRequesterDOBLabel = new JLabel("Date of Birth: ");
         vehicleOwnerIDLabel = new JLabel("ID Number: ");
-        vehicleMakeLabel = new JLabel("Make: ");				
+        vehicleMakeLabel = new JLabel("Make: ");
         vehicleModelLabel = new JLabel("Model ");				
-        vehicleYearLabel = new JLabel("Year ");					
-        vehicleColorLabel = new JLabel("Color: ");				
+        vehicleYearLabel = new JLabel("Year ");		
+        vehicleColorLabel = new JLabel("Color: ");		
         vehicleLicenseLabel = new JLabel("License Plate: ");	
-        vehicleResidencyLabel = new JLabel("Residency Time (in hours): "); 
+        vehicleResidencyLabel = new JLabel("Residency Time: "); 
         jobRequesterIDLabel = new JLabel("ID Number: ");
         jobDurationLabel = new JLabel("Job Duration (in hours): ");	
-        jobDeadlineLabel = new JLabel("Job Deadline: ");			
-        jobTypeLabel = new JLabel("Job Type: ");					
-        jobIntensityLabel = new JLabel("Job Intensity: ");			
+        jobDeadlineLabel = new JLabel("Job Deadline: ");		
+        jobTypeLabel = new JLabel("Job Type: ");			
+        jobIntensityLabel = new JLabel("Job Intensity: ");		
+        setLabelFont(homeDescLabel, 20);
+        setLabelFont(vehicleOwnerDescLabel, 20);
+        setLabelFont(jobRequesterDescLabel, 20);
+        setLabelFont(vehicleOwnerNameLabel, 15);
+        setLabelFont(jobRequesterNameLabel, 15);
+        setLabelFont(vehicleOwnerDOBLabel, 15);
+        setLabelFont(jobRequesterDOBLabel, 15);
+        setLabelFont(vehicleOwnerIDLabel, 15);
+        setLabelFont(vehicleMakeLabel, 15);
+        setLabelFont(vehicleModelLabel, 15);
+        setLabelFont(vehicleYearLabel, 15);
+        setLabelFont(vehicleColorLabel, 15);
+        setLabelFont(vehicleLicenseLabel, 15);
+        setLabelFont(vehicleResidencyLabel, 15);
+        setLabelFont(jobRequesterIDLabel, 15);
+        setLabelFont(jobDurationLabel, 15);
+        setLabelFont(jobDeadlineLabel, 15);
+        setLabelFont(jobTypeLabel, 15);
+        setLabelFont(jobIntensityLabel, 15);
+		
         layout = new CardLayout();
         cardsPanel = new JPanel(layout);
 		output = new PrintStream(new File("userInformation.txt"));
@@ -198,6 +230,9 @@ public class VehicularCloudFrame extends JFrame {
 
         userInput = new LinkedList<String>();
         userInputTextArea = new JTextArea("No Requests Available");
+        userInputTextArea.setBackground(Color.decode("#68AAC3"));
+        userInputTextArea.setForeground(Color.WHITE);
+        userInputTextArea.setFont(new Font("Ariel", Font.BOLD, 15));
         
         jobCompletionTable = new JScrollPane(jobCompletionTimeTable);//
 		jobCompletionTable.setPreferredSize(new Dimension(525,400));//
@@ -222,7 +257,7 @@ public class VehicularCloudFrame extends JFrame {
 
 
         setSize(FRAME_WIDTH, FRAME_HEIGHT);
-        setTitle("Vehicular Cloud Management System");
+        setTitle("Cloud Cruiser");
         setLocationRelativeTo(null);
         
         vehicleOwnerSubmitButton.addActionListener(new VehicleOwnerSubmitListener());
@@ -559,7 +594,7 @@ public class VehicularCloudFrame extends JFrame {
 	class VCCListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 	        vccFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-	        vccFrame.setTitle("Vehicular Cloud Controller");
+	        vccFrame.setTitle("Cloud Cruiser Admin");
 	        vccFrame.setLocationRelativeTo(null);
 		    vccFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		    vccFrame.setVisible(true);
@@ -662,27 +697,59 @@ public class VehicularCloudFrame extends JFrame {
 	}
 	
 	
+
 	//Creates the buttons
 	private void createButtons() {
+		private void createButtons() {
 		vehicleOwnerButton = new JButton("Vehicle Owner");
-		jobRequesterButton = new JButton("Job Requester");
-		vccButton = new JButton("VCController");
-		vehicleOwnerBackButton = new JButton("Back");
-		jobRequesterBackButton = new JButton("Back");
-		calculateCompletionTimeButton = new JButton("Calculate Completion Time");
-		vccJobCompletionTimeButton = new JButton("Calculate All Completion/Residency Times");//
-		vccJobCompletionTimeBackButton = new JButton("Back");//
+		vehicleOwnerButton.setBackground(Color.WHITE);
+		vehicleOwnerButton.setForeground(Color.decode("#68AAC3"));
 		
-		//vccVehicleResidencyTimeButton = new JButton("Calculate All Vehicle Residency Times");//
-		//vccVehicleResidencyTimeBackButton = new JButton("Back");//
-
+		jobRequesterButton = new JButton("Job Requester");
+		jobRequesterButton.setBackground(Color.WHITE);
+		jobRequesterButton.setForeground(Color.decode("#68AAC3"));
+		
+		vccButton = new JButton("Admin");
+		vccButton.setBackground(Color.WHITE);
+		vccButton.setForeground(Color.decode("#68AAC3"));
+		
+		vehicleOwnerBackButton = new JButton("Back");
+		vehicleOwnerBackButton.setBackground(Color.WHITE);
+		vehicleOwnerBackButton.setForeground(Color.decode("#68AAC3"));
+		
+		jobRequesterBackButton = new JButton("Back");
+		jobRequesterBackButton.setBackground(Color.WHITE);
+		jobRequesterBackButton.setForeground(Color.decode("#68AAC3"));
+		
+		calculateCompletionTimeButton = new JButton("Calculate Completion Time");
+		calculateCompletionTimeButton.setBackground(Color.WHITE);
+		calculateCompletionTimeButton.setForeground(Color.decode("#68AAC3"));
+		
+		vccJobCompletionTimeButton = new JButton("Calculate All Completion Times");
+		vccJobCompletionTimeButton.setBackground(Color.WHITE);
+		vccJobCompletionTimeButton.setForeground(Color.decode("#68AAC3"));
+		
+		vccJobCompletionTimeBackButton = new JButton("Back");
+		vccJobCompletionTimeBackButton.setBackground(Color.WHITE);
+		vccJobCompletionTimeBackButton.setForeground(Color.decode("#68AAC3"));
+		
 		vccViewRequestsButton = new JButton("View Requests");
+		vccViewRequestsButton.setBackground(Color.WHITE);
+		vccViewRequestsButton.setForeground(Color.decode("#68AAC3"));
+		
 		vccViewRequestsBackButton = new JButton("Back");
+		vccViewRequestsBackButton.setBackground(Color.WHITE);
+		vccViewRequestsBackButton.setForeground(Color.decode("#68AAC3"));
 		
 		
 		//UPDATED- Creates accept/reject buttons within VCController
 		vccAcceptButton = new JButton("Accept");
+		vccAcceptButton.setBackground(Color.WHITE);
+		vccAcceptButton.setForeground(Color.decode("#68AAC3"));
+		
 		vccRejectButton = new JButton("Reject");
+		vccRejectButton.setBackground(Color.WHITE);
+		vccRejectButton.setForeground(Color.decode("#68AAC3"));
 		
 		ActionListener vehicleOwnerListener = new VehicleOwnerListener();
 		vehicleOwnerButton.addActionListener(vehicleOwnerListener);
@@ -732,6 +799,8 @@ public class VehicularCloudFrame extends JFrame {
 		
 		//Vehicle Owner Submit Button
         vehicleOwnerSubmitButton = new JButton("Submit");
+        vehicleOwnerSubmitButton.setBackground(Color.WHITE);
+        vehicleOwnerSubmitButton.setForeground(Color.decode("#68AAC3"));
         ActionListener vehicleOwnerSubmitListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -755,6 +824,8 @@ public class VehicularCloudFrame extends JFrame {
 
         //Job Requester Submit Button
         jobRequesterSubmitButton = new JButton("Submit");
+        jobRequesterSubmitButton.setBackground(Color.WHITE);
+        jobRequesterSubmitButton.setForeground(Color.decode("#68AAC3"));
         ActionListener jobRequesterSubmitListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -774,34 +845,23 @@ public class VehicularCloudFrame extends JFrame {
     }
         
 	
-	//Creates the panels
+//Creates the panels
 	private void createPanels() {
 		JPanel homePanel = new JPanel();
 		JPanel vehicleOwnerPanel = new JPanel();
-		JPanel vehicleOwnerNamePanel = new JPanel();
-		JPanel vehicleOwnerDOBPanel = new JPanel();
 		JPanel jobRequesterPanel = new JPanel();
-		JPanel jobRequesterNamePanel = new JPanel();
-		JPanel jobRequesterDOBPanel = new JPanel();
-		JPanel vehicleOwnerIDPanel = new JPanel();
-		JPanel jobRequesterIDPanel = new JPanel();
 		JPanel vehicleOwnerButtonPanel = new JPanel();
 		JPanel jobRequesterButtonPanel = new JPanel();
-	    JPanel jobDurationPanel = new JPanel(); 
-	    JPanel jobDeadlinePanel = new JPanel();
-	    JPanel jobTypePanel = new JPanel(); 	
-	    JPanel jobIntensityPanel = new JPanel(); 
-	    JPanel vehicleMakePanel = new JPanel();	
-	    JPanel vehicleModelPanel = new JPanel();	
-	    JPanel vehicleYearPanel = new JPanel();	
-	    JPanel vehicleColorPanel = new JPanel();	
-	    JPanel vehicleLicensePanel = new JPanel();	
-	    JPanel vehicleResidencyPanel = new JPanel();
 	    JPanel vccHomePanel = new JPanel();
 	    JPanel vccCompletionTimePanel = new JPanel();
-	    JPanel vccResidencyTimePanel = new JPanel();//
 	    JPanel vccViewRequestsPanel = new JPanel();
 	    JPanel vccRequestsButtonPanel = new JPanel();
+	    vehicleOwnerButton.setPreferredSize(new Dimension(200, 30));
+	    jobRequesterButton.setPreferredSize(new Dimension(200, 30));
+	    vccButton.setPreferredSize(new Dimension(200, 30));
+	    vehicleOwnerButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+	    jobRequesterButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+	    vccButton.setFont(new Font("SansSerif", Font.BOLD, 16));
 		
 		cardsPanel.add(homePanel, "home");
 		cardsPanel.add(vehicleOwnerPanel, "vehicleOwner");
@@ -810,8 +870,6 @@ public class VehicularCloudFrame extends JFrame {
 		
 		vccCardsPanel.add(vccHomePanel, "home");
 		vccCardsPanel.add(vccCompletionTimePanel, "completionTime");
-		vccCardsPanel.add(vccResidencyTimePanel, "residencyTime");//
-
 		vccCardsPanel.add(vccViewRequestsPanel, "viewRequests");
 		vccFrame.add(vccCardsPanel);
 		
@@ -820,87 +878,173 @@ public class VehicularCloudFrame extends JFrame {
 		homePanel.add(vehicleOwnerButton);
 		homePanel.add(jobRequesterButton);
 		homePanel.add(vccButton);
+		homePanel.setBackground(Color.decode("#68AAC3"));
+		vehicleOwnerPanel.setBackground(Color.decode("#68AAC3"));
+		jobRequesterPanel.setBackground(Color.decode("#68AAC3"));
+		vccHomePanel.setBackground(Color.decode("#68AAC3"));
+		vccCompletionTimePanel.setBackground(Color.decode("#68AAC3"));
+		vccViewRequestsPanel.setBackground(Color.decode("#68AAC3"));
 		
 		//Vehicle Owner Panels
-		vehicleOwnerNamePanel.add(vehicleOwnerNameLabel);
-		vehicleOwnerNamePanel.add(vehicleOwnerNameField);
-		
-		vehicleOwnerDOBPanel.add(vehicleOwnerDOBLabel);
-		vehicleOwnerDOBPanel.add(vehicleOwnerDOBField);
-		
-		vehicleOwnerIDPanel.add(vehicleOwnerIDLabel);
-		vehicleOwnerIDPanel.add(vehicleOwnerIDField);
-		
-		vehicleMakePanel.add(vehicleMakeLabel);
-		vehicleMakePanel.add(vehicleMakeField);
-		
-		vehicleModelPanel.add(vehicleModelLabel);
-		vehicleModelPanel.add(vehicleModelField);
-		
-		vehicleYearPanel.add(vehicleYearLabel);
-		vehicleYearPanel.add(vehicleYearField);
-		
-		vehicleColorPanel.add(vehicleColorLabel);
-		vehicleColorPanel.add(vehicleColorField);
-		
-		vehicleLicensePanel.add(vehicleLicenseLabel);
-		vehicleLicensePanel.add(vehicleLicenseField);
-		
-		vehicleResidencyPanel.add(vehicleResidencyLabel);
-		vehicleResidencyPanel.add(vehicleResidencyField);
-		
+		vehicleOwnerPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.insets = new Insets(10, -200, 10, 10);
+		gbc.ipadx=100;
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 2;
+		gbc.insets = new Insets(20, 10, 0, 10); 
+		gbc.anchor = GridBagConstraints.CENTER;
+		vehicleOwnerPanel.add(vehicleOwnerDescLabel, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth=1;
+		vehicleOwnerPanel.add(vehicleOwnerNameLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleOwnerNameField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		vehicleOwnerPanel.add(vehicleOwnerDOBLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleOwnerDOBField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		vehicleOwnerPanel.add(vehicleOwnerIDLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleOwnerIDField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 4;
+		vehicleOwnerPanel.add(vehicleMakeLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleMakeField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 5;
+		vehicleOwnerPanel.add(vehicleModelLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleModelField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		vehicleOwnerPanel.add(vehicleYearLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleYearField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 7;
+		vehicleOwnerPanel.add(vehicleColorLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleColorField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 8;
+		vehicleOwnerPanel.add(vehicleLicenseLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleLicenseField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 9;
+		vehicleOwnerPanel.add(vehicleResidencyLabel, gbc);
+		gbc.gridx = 1;
+		vehicleOwnerPanel.add(vehicleResidencyField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 10;
+		gbc.gridwidth = 2;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.insets = new Insets(10, 0, 10, 0); 
+		vehicleOwnerPanel.add(vehicleOwnerButtonPanel, gbc);
+
 		vehicleOwnerButtonPanel.add(vehicleOwnerBackButton);
 		vehicleOwnerButtonPanel.add(vehicleOwnerSubmitButton);
-		
-		vehicleOwnerPanel.add(vehicleOwnerDescLabel);
-		vehicleOwnerPanel.add(vehicleOwnerNamePanel);
-		vehicleOwnerPanel.add(vehicleOwnerDOBPanel);
-		vehicleOwnerPanel.add(vehicleOwnerIDPanel);
-		vehicleOwnerPanel.add(vehicleMakePanel);
-		vehicleOwnerPanel.add(vehicleModelPanel);
-		vehicleOwnerPanel.add(vehicleYearPanel);
-		vehicleOwnerPanel.add(vehicleColorPanel);
-		vehicleOwnerPanel.add(vehicleLicensePanel);
-		vehicleOwnerPanel.add(vehicleResidencyPanel);
-		
-		vehicleOwnerPanel.add(vehicleOwnerButtonPanel);
+		vehicleOwnerButtonPanel.setBackground(Color.decode("#68AAC3"));
 		
 		//Job Requester Panels
-		jobRequesterNamePanel.add(jobRequesterNameLabel);
-		jobRequesterNamePanel.add(jobRequesterNameField);
-		
-		jobRequesterDOBPanel.add(jobRequesterDOBLabel);
-		jobRequesterDOBPanel.add(jobRequesterDOBField);
-		
-		jobRequesterIDPanel.add(jobRequesterIDLabel);
-		jobRequesterIDPanel.add(jobRequesterIDField);
-		
-		jobDurationPanel.add(jobDurationLabel); 
-		jobDurationPanel.add(jobDurationField); 
-		
-		jobDeadlinePanel.add(jobDeadlineLabel);  
-		jobDeadlinePanel.add(jobDeadlineField);  
-		
-		jobTypePanel.add(jobTypeLabel);  
-		jobTypePanel.add(jobTypeField);  
-		
-		
-		jobIntensityPanel.add(jobIntensityLabel);  
-		jobIntensityPanel.add(jobIntensityField); 
+		jobRequesterPanel.setLayout(new GridBagLayout());
+		GridBagConstraints jrp = new GridBagConstraints();
+		jrp.anchor = GridBagConstraints.LINE_START;
+		jrp.insets = new Insets(10, -200, 10, 10);
+		jrp.ipadx=100;
+
+		jrp.gridx = 0;
+		jrp.gridy = 0;
+		jrp.gridwidth = 2;
+		jrp.insets = new Insets(20, 10, 0, 10); 
+		jrp.anchor = GridBagConstraints.CENTER;
+		jobRequesterPanel.add(jobRequesterDescLabel, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 1;
+		jrp.gridwidth=1;
+		jobRequesterPanel.add(jobRequesterNameLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobRequesterNameField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 2;
+		jobRequesterPanel.add(jobRequesterDOBLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobRequesterDOBField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 3;
+		jobRequesterPanel.add(jobRequesterIDLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobRequesterIDField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 4;
+		jobRequesterPanel.add(jobDurationLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobDurationField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 5;
+		jobRequesterPanel.add(jobDeadlineLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobDeadlineField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 6;
+		jobRequesterPanel.add(jobTypeLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobTypeField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 7;
+		jobRequesterPanel.add(jobIntensityLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(jobIntensityField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 8;
+		jobRequesterPanel.add(vehicleLicenseLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(vehicleLicenseField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 9;
+		jobRequesterPanel.add(vehicleResidencyLabel, jrp);
+		jrp.gridx = 1;
+		jobRequesterPanel.add(vehicleResidencyField, jrp);
+
+		jrp.gridx = 0;
+		jrp.gridy = 10;
+		jrp.gridwidth = 2;
+		jrp.anchor = GridBagConstraints.CENTER;
+		jrp.insets = new Insets(10, 0, 10, 0); 
+		jobRequesterPanel.add(jobRequesterButtonPanel, jrp);
 
 		jobRequesterButtonPanel.add(jobRequesterBackButton);
 		jobRequesterButtonPanel.add(jobRequesterSubmitButton);
-
-		jobRequesterPanel.add(jobRequesterDescLabel);
-		jobRequesterPanel.add(jobRequesterNamePanel);
-		jobRequesterPanel.add(jobRequesterDOBPanel);
-		jobRequesterPanel.add(jobRequesterIDPanel);
-		jobRequesterPanel.add(jobDurationPanel);	
-		jobRequesterPanel.add(jobDeadlinePanel);	
-		jobRequesterPanel.add(jobTypePanel); 		
-		jobRequesterPanel.add(jobIntensityPanel); 	
-		jobRequesterPanel.add(jobRequesterButtonPanel);
-		jobRequesterPanel.add(calculateCompletionTimeButton);
+		jobRequesterButtonPanel.add(calculateCompletionTimeButton);
+		jobRequesterButtonPanel.setBackground(Color.decode("#68AAC3"));
 		
 		//VCC Panels
 		vccHomePanel.add(vccJobCompletionTimeButton);//
@@ -909,6 +1053,7 @@ public class VehicularCloudFrame extends JFrame {
 		vccHomePanel.add(vccViewRequestsButton);
 		vccCompletionTimePanel.add(jobCompletionTable);//
 		vccCompletionTimePanel.add(vehicleResidencyTable);//
+		vccHomePanel.setBackground(Color.decode("#68AAC3"));
 
 		vccCompletionTimePanel.add(vccJobCompletionTimeBackButton);//
 		//vccCompletionTimePanel.add(vccVehicleResidencyTimeBackButton);//
@@ -920,5 +1065,7 @@ public class VehicularCloudFrame extends JFrame {
 		vccRequestsButtonPanel.add(vccRejectButton); 
 		vccRequestsButtonPanel.add(vccViewRequestsBackButton);
 		vccViewRequestsPanel.add(vccRequestsButtonPanel);
+		vccRequestsButtonPanel.setBackground(Color.decode("#68AAC3"));
+		vccViewRequestsPanel.setBackground(Color.decode("#68AAC3"));
 	}
 }
